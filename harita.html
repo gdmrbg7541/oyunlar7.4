@@ -96,7 +96,7 @@
     }
     .progress-bar { width: 0%; height: 100%; background: var(--success); transition: width 0.4s ease; }
     
-    .hidden { display: none !important; }
+    
 
 .back-btn {
     position: absolute;
@@ -186,6 +186,7 @@
 
     .btn-main { padding: 15px 40px; font-size: 1.2rem; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 10px; }
 
+
    /* Konteynır ve Ekran Güncelleme */
 <style>
     @font-face {
@@ -270,7 +271,7 @@
     position: absolute;
     bottom: 20px;
     right: 30px; /* Sola değil sağa yaslandı */
-    width: 350px;  /* 212px * 1.20 */
+    width: 400px;  /* 212px * 1.20 */
     height: 254px; /* 212px * 1.20 */
     background: rgba(255, 255, 255, 0.95);
     border: 3px solid var(--primary);
@@ -331,31 +332,118 @@
     padding: 4px 10px;
 }
 
-/* Merkez (Vesat) İkonu */
-.dir-center { 
-    grid-area: center; 
-    background: var(--primary); 
-    color: white;
-    width: 56px; /* 45px -> 56px */
-    height: 56px; 
-    border-radius: 50%;
-    border: 4px solid #fff; 
-    font-size: 1rem;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.dir-text {
-    font-weight: 200 !important;
-}
 
 .dir-north { grid-area: north;}
 .dir-south { grid-area: south; }
 .dir-east { grid-area: east; }
 .dir-west { grid-area: west; }
 
+/* Normal fare üzerine gelme efekti */
+path:hover {
+    fill: #3498db; /* Mavi */
+    cursor: pointer;
+}
+
+
+/* Sorulacak şehirlerin vurgusu (Altın Sarısı Tonu) */
+.highlight-city {
+    fill: #ffdfba !important; /* Hafif turuncumsu sarı */
+    stroke: #f39c12 !important; /* Kehribar kenarlık */
+    stroke-width: 0.5px;
+    animation: gentlePulse 2s infinite ease-in-out;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+/* Yanlış cevap ve Hover çakışmaması için */
+.no-hover { pointer-events: none !important; }
+
+.wrong-answer {
+    fill: #e74c3c !important;
+    animation: shakeGrow 0.5s ease-in-out;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+@keyframes gentlePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); } /* Çok hafif büyüme vurgusu */
+    100% { transform: scale(1); }
+}
+
+@keyframes shakeGrow {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.2) rotate(2deg); }
+    50% { transform: scale(1.2) rotate(-2deg); }
+    100% { transform: scale(1); }
+}
+
+/* Yeni Öğrenci Bildirimi Overlay */
+#student-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(44, 62, 80, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    color: white;
+}
+
+.overlay-content {
+    background: white;
+    padding: 40px 80px;
+    border-radius: 30px;
+    text-align: center;
+    color: var(--primary);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.overlay-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--success);
+}
+
+.overlay-text {
+    font-size: 3.5rem;
+    margin-bottom: 30px;<div id="student-overlay" class="hidden">
+    
+}
+
+.next-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 15px 50px;
+    font-size: 2rem;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+/* Tıklandıktan sonra animasyonu durdurur ama rengi (fill) korur */
+.answered-active {
+    fill: #ffdfba !important;
+    animation: none !important; 
+    stroke: #f39c12 !important;
+    stroke-width: 2px !important;
+}
+
 </style>
 </head>
 <body>
+
+<div id="student-overlay" class="hidden">
+    <div class="overlay-content">
+       <div class="overlay-title" id="overlay-msg" style="font-size: 7rem !important;">!أَحْسَنْت</div>
+       <p class="overlay-text" style="font-size: 3.5rem !important;">الدَّوْر لِلطّالِب التّالي</p>
+        <button class="next-btn" onclick="closeOverlay()">حَسَنًا</button>
+    </div>
+</div>
 
 <div class="container">
     <a href="index.html" id="nav-btn" class="back-btn" title="Anasayfa">
@@ -723,134 +811,205 @@
         <div class="compass-axis-v"></div>
         
         <div class="compass-grid">
-            <div class="dir-item dir-north">
-                <span class="dir-text">الشَّمال</span>
-            </div>
-            <div class="dir-item dir-west">
-                <span class="dir-text">الغَرْب</span>
-            </div>
-            <div class="dir-item dir-center">
-                <span class="dir-text">وَسَط</span>
-            </div>
-            <div class="dir-item dir-east">
-                <span class="dir-text">الشَّرْق</span>
-            </div>
-            <div class="dir-item dir-south">
-                <span class="dir-text">الجَنوب</span>
-            </div>
-        </div>
+    <div class="dir-item dir-north">
+        <span class="dir-text">الشَّمال</span>
+    </div>
+    <div class="dir-item dir-west">
+        <span class="dir-text">الغَرْب</span>
+    </div>
+    <div class="dir-item dir-east">
+        <span class="dir-text">الشَّرْق</span>
+    </div>
+    <div class="dir-item dir-south">
+        <span class="dir-text">الجَنوب</span>
+    </div>
+</div>
     </div>
 </div>
 
 <div class="arabic-word" id="target-word">...</div>
 
 <script>
-   const cityData = [
-        { id: "TR34", ar: "إِسْطَنْبول" },
-        { id: "TR06", ar: "أَنْقَرَة" },
-        { id: "TR33", ar: "مَرْسين" },
-        { id: "TR16", ar: "بورْصَة" },
-        { id: "TR57", ar: "سينوب" },
-        { id: "TR65", ar: "وان" },
-        { id: "TR35", ar: "إِزْمير" },
-        { id: "TR42", ar: "قونْيا" },
-        { id: "TR72", ar: "باطْمان" },
-        { id: "TR21", ar: "دِيارْ بَكِر" },
-        { id: "TR25", ar: "أَرْضُروم" },
-        { id: "TR38", ar: "قَيْصَري" },
-        { id: "TR03", ar: "أَفْيون" }
-    ];
+// 1. Şehir Verileri
+const cityData = [
+    { id: "TR34", ar: "إِسْطَنْبول" },
+    { id: "TR06", ar: "أَنْقَرَة" },
+    { id: "TR33", ar: "مَرْسين" },
+    { id: "TR16", ar: "بورْصَة" },
+    { id: "TR57", ar: "سينوب" },
+    { id: "TR65", ar: "وان" },
+    { id: "TR35", ar: "إِزْمير" },
+    { id: "TR42", ar: "قونْيا" },
+    { id: "TR72", ar: "باطْمان" },
+    { id: "TR21", ar: "دِيارْ بَكِر" },
+    { id: "TR25", ar: "أَرْضُروم" },
+    { id: "TR38", ar: "قَيْصَري" },
+    { id: "TR03", ar: "أَفْيون" },
+    { id: "TR61", ar: "طرابزون" },
+    { id: "TR58", ar: "سيواس" },
+    { id: "TR55", ar: "سامْسون" },
+    { id: "TR07", ar: "أَنْطالِيا" },
+    { id: "TR47", ar: "مارْدين" }
+];
 
-    let currentStep = 0;
-    let shuffledCities = [];
-    // Bu değeri şehir sayısı kadar (13) yaparsan tüm şehirleri sorar. 
-    // Şu an 5 farklı şehir sorup bitirir.
-    const limit = 13; 
+let currentStep = 0;
+let shuffledCities = [];
+const limit = 18; 
 
 function startGame() {
-    // 1. Yönerge sesini oynat
-    const audio = new Audio('yonergeharita.mp3');
-    audio.play().catch(e => console.log("Ses çalınamadı, etkileşim gerekiyor: ", e));
-
-    // 2. Ekranları Değiştir
+    // Ekranları Değiştir
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('game-screen').classList.remove('hidden');
 
-    // 3. Buton ve İkonu Geri Tuşuna Dönüştür
+    // Geri Tuşu Ayarı
     const navBtn = document.getElementById('nav-btn');
-    const navIcon = document.getElementById('nav-icon');
-    
-    navBtn.href = "javascript:void(0)";
-    navBtn.onclick = function() { location.reload(); };
-    
-    // İkonu Sade Geri Oku yap
-    navIcon.innerHTML = `
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-    `;
+    if (navBtn) {
+        navBtn.onclick = function() { location.reload(); };
+    }
 
-    // Oyun başlatma rutinleri
+    // Şehirleri Karıştır ve Kopyala
+    shuffledCities = [...cityData].sort(() => 0.5 - Math.random()).slice(0, limit);
+
+    // Harita Etkileşimlerini Bağla
     const paths = document.querySelectorAll('path');
     paths.forEach(path => {
         path.onclick = function() { handleCityClick(this.id); };
+        
+        // Temizlik
+        path.classList.remove('highlight-city', 'answered-correct-fixed');
+        path.style.fill = ""; 
+
+        // Listede olan tüm illeri oyun başında vurgula
+        const isKnownCity = cityData.some(city => city.id === path.id);
+        if (isKnownCity) {
+            path.classList.add('highlight-city');
+        }
     });
-    shuffledCities = cityData.sort(() => 0.5 - Math.random()).slice(0, limit);
+
     currentStep = 0;
     showQuestion();
 }
 
-   function showQuestion() {
-        if (currentStep >= limit) {
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-            return;
-        }
+function showQuestion() {
+    // Şehirler bittiğinde sonsuz döngü: Listeyi yeniden karıştır
+    if (currentStep >= shuffledCities.length) {
+        currentStep = 0;
+        shuffledCities = [...cityData].sort(() => 0.5 - Math.random()).slice(0, limit);
         
-        // Soru cümlesini oluştur: "Nerede bulunur ... şehri?"
-        const cityName = shuffledCities[currentStep].ar;
-        const questionSentence = `أَيْن تَقَعُ مَدينَة ${cityName}؟`;
-        
-        document.getElementById('target-word').innerText = questionSentence;
-        document.getElementById('progress').style.width = (currentStep / limit) * 100 + "%";
+        // Yanlış tıklandığı için sönmüş vurguları geri getir (doğru bilinenler hariç)
+        document.querySelectorAll('path').forEach(path => {
+            const isKnownCity = cityData.some(city => city.id === path.id);
+            if (isKnownCity && !path.classList.contains('answered-correct-fixed')) {
+                path.classList.add('highlight-city');
+            }
+        });
+    }
+    
+    const currentCity = shuffledCities[currentStep];
+    if (!currentCity) return;
+
+    // Arapça Soru Metni
+    const targetWordElem = document.getElementById('target-word');
+    if (targetWordElem) {
+        targetWordElem.innerText = `أَيْن تَقَعُ مَدينَة ${currentCity.ar}؟`;
+    }
+    
+    // Ses Dosyası Yönetimi
+    const audioFiles = {
+        "TR34": "istanbul", "TR06": "ankara", "TR33": "mersin",
+        "TR16": "bursa", "TR57": "sinop", "TR65": "van",
+        "TR35": "izmir", "TR42": "konya", "TR72": "batman",
+        "TR21": "diyarbakir", "TR25": "erzurum", "TR38": "kayseri",
+        "TR03": "afyon", "TR61": "trabzon", "TR58": "sivas",
+        "TR55": "samsun", "TR07": "antalya", "TR47": "mardin"
+    };
+
+    const fileName = audioFiles[currentCity.id];
+    if (fileName) {
+        setTimeout(() => {
+            const audio = new Audio(`${fileName}.mp3`);
+            audio.play().catch(e => console.log("Ses dosyası bulunamadı: " + fileName));
+        }, 1000);
     }
 
-    function handleCityClick(clickedId) {
-        const correctId = shuffledCities[currentStep].id;
-        const element = document.getElementById(clickedId);
-        
-        if (!element) return;
-
-        if (clickedId === correctId) {
-            element.style.fill = "#27ae60";
-            currentStep++;
-            setTimeout(() => {
-                element.style.fill = ""; 
-                showQuestion();
-            }, 600);
-        } else {
-            element.style.fill = "#e74c3c";
-            setTimeout(() => element.style.fill = "", 500);
-        }
+    // İlerleme Çubuğu
+    const progressBar = document.getElementById('progress');
+    if (progressBar) {
+        const progressWidth = (currentStep / limit) * 100;
+        progressBar.style.width = progressWidth + "%";
     }
+}
 
-    function resetGame() {
-        location.reload();
+function handleCityClick(clickedId) {
+    const currentCity = shuffledCities[currentStep];
+    if (!currentCity) return;
+
+    const correctId = currentCity.id;
+    const element = document.getElementById(clickedId);
+    
+    if (!element) return;
+
+    // Çift tıklamayı engellemek için haritayı kilitle
+    document.getElementById('features').style.pointerEvents = 'none';
+
+    if (clickedId === correctId) {
+        // DOĞRU: Kremsi rengi sabitle
+        element.classList.add('answered-correct-fixed'); 
+        currentStep++; 
+        setTimeout(() => {
+            showStudentOverlay("!أَحْسَنْت"); 
+        }, 600);
+    } else {
+        // YANLIŞ: Vurguyu kaldır (sönsün)
+        element.classList.remove('highlight-city');
+        element.style.fill = ""; 
+        currentStep++; 
+        setTimeout(() => {
+            showStudentOverlay("لِلْأَسَف!"); 
+        }, 600);
     }
+}
+
+function showStudentOverlay(msg) {
+    const overlay = document.getElementById('student-overlay');
+    const msgElem = document.querySelector('.overlay-title');
+    
+    if (overlay && msgElem) {
+        msgElem.innerText = msg;
+        // Renk ayarı
+        msgElem.style.color = (msg === "!أَحْسَنْت") ? "var(--success)" : "var(--danger)";
+        overlay.classList.remove('hidden');
+    } else {
+        closeOverlay();
+    }
+}
+
+function closeOverlay() {
+    const overlay = document.getElementById('student-overlay');
+    if (overlay) overlay.classList.add('hidden');
+    
+    const mapFeatures = document.getElementById('features');
+    if (mapFeatures) mapFeatures.style.pointerEvents = 'all'; // Haritayı aç
+    
+    showQuestion();
+}
+
+function resetGame() {
+    location.reload();
+}
+
 function goToStartScreen() {
-    // Oyun ekranını gizle
     document.getElementById('game-screen').classList.add('hidden');
-    // Sonuç ekranını gizle (eğer oradaysa)
     document.getElementById('result-screen').classList.add('hidden');
-    // Başlangıç ekranını göster
     document.getElementById('start-screen').classList.remove('hidden');
     
-    // Opsiyonel: Oyunu tamamen sıfırlamak istersen
     currentStep = 0;
-    document.getElementById('progress').style.width = "0%";
+    const progressBar = document.getElementById('progress');
+    if (progressBar) progressBar.style.width = "0%";
     
-    // Haritadaki boyanmış (yeşil/kırmızı) şehirleri temizle
     document.querySelectorAll('path').forEach(path => {
         path.style.fill = "";
+        path.classList.remove('answered-correct-fixed', 'highlight-city');
     });
 }
 </script>
