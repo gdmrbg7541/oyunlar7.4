@@ -446,16 +446,9 @@ path:hover {
 .answered-correct-fixed {
     fill: #ffdfba !important; /* Rengi sabit tut */
     animation: none !important; 
-    stroke: var(--success) !important; /* Kenarlığı yeşil yap */
-    stroke-width: 1px !important;
+    
 }
 
-/* Yanlış cevap verildiğinde sadece görsel bir efekt (sallanma) ekliyoruz, rengi ellemiyoruz */
-.wrong-shake {
-   
-    stroke: var(--danger) !important;
-    stroke-width: 1px !important;
-}
 
 </style>
 </head>
@@ -469,7 +462,7 @@ path:hover {
 </a>
 <div id="student-overlay" class="hidden">
     <div class="overlay-content">
-        <div class="overlay-title" id="overlay-msg" style="font-size: 7rem !important;">!أَحْسَنْت</div>
+        <div class="overlay-title" id="overlay-msg" style="font-size: 7rem !important;">أَحْسَنْت</div>
         <p class="overlay-text" style="font-size: 3.5rem !important;">الدَّوْر لِلطّالِب التّالي</p>
         <button class="next-btn" onclick="closeOverlay()">حَسَنًا</button>
     </div>
@@ -989,7 +982,7 @@ function handleCityClick(clickedId) {
         setTimeout(() => { 
             element.classList.remove('wrong-shake'); // Sallanma bitince efekti temizle
             currentStep++; // Bir sonraki soruya geç
-            showStudentOverlay("لِلْأَسَف!"); 
+            showStudentOverlay("لِلْأَسَف"); 
         }, 600);
     }
 }
@@ -1001,7 +994,7 @@ function showStudentOverlay(msg) {
     if (overlay) {
         if (msgElem) {
             msgElem.innerText = msg;
-            msgElem.style.color = (msg === "!أَحْسَنْت") ? "var(--success)" : "var(--danger)";
+            msgElem.style.color = (msg === "أَحْسَنْت") ? "var(--success)" : "var(--danger)";
         }
         overlay.classList.remove('hidden');
     } else {
