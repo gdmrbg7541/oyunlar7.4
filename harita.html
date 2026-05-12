@@ -385,13 +385,14 @@ path:hover {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(44, 62, 80, 0.9);
+    /* rgba sonundaki 0.9'u 1 yaparsan arkası hiç görünmez, 
+       0.95 yaparsan harita çok hafif ve karanlık görünür */
+    background: rgba(20, 30, 40, 0.98); 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 2000;
-    color: white;
+    z-index: 9999; /* En üstte olduğundan emin olalım */
 }
 
 .overlay-content {
@@ -433,26 +434,50 @@ path:hover {
     stroke-width: 2px !important;
 }
 
+/* Sorulacak 18 şehrin sabit kremsi vurgusu */
+.highlight-city {
+    fill: #ffdfba !important; /* Kremsi renk */
+    stroke: #f39c12 !important; 
+    stroke-width: 0.5px;
+    animation: gentlePulse 2s infinite ease-in-out;
+}
+
+/* Doğru bilindiğinde animasyonu durdur ama rengi (fill) koru */
+.answered-correct-fixed {
+    fill: #ffdfba !important; /* Rengi sabit tut */
+    animation: none !important; 
+    stroke: var(--success) !important; /* Kenarlığı yeşil yap */
+    stroke-width: 1px !important;
+}
+
+/* Yanlış cevap verildiğinde sadece görsel bir efekt (sallanma) ekliyoruz, rengi ellemiyoruz */
+.wrong-shake {
+    animation: shakeGrow 0.5s ease-in-out !important;
+    stroke: var(--danger) !important;
+    stroke-width: 1px !important;
+}
+
 </style>
 </head>
 <body>
 
+<a href="index.html" id="nav-btn" class="back-btn" title="Anasayfa">
+    <svg id="nav-icon" viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+</a>
 <div id="student-overlay" class="hidden">
     <div class="overlay-content">
-       <div class="overlay-title" id="overlay-msg" style="font-size: 7rem !important;">!أَحْسَنْت</div>
-       <p class="overlay-text" style="font-size: 3.5rem !important;">الدَّوْر لِلطّالِب التّالي</p>
+        <div class="overlay-title" id="overlay-msg" style="font-size: 7rem !important;">!أَحْسَنْت</div>
+        <p class="overlay-text" style="font-size: 3.5rem !important;">الدَّوْر لِلطّالِب التّالي</p>
         <button class="next-btn" onclick="closeOverlay()">حَسَنًا</button>
     </div>
 </div>
 
+
+
 <div class="container">
-    <a href="index.html" id="nav-btn" class="back-btn" title="Anasayfa">
-        <svg id="nav-icon" viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-    </a>
-    
     <div id="start-screen" class="hero-wrapper">
         <div class="hero-content">
             <h1 class="hero-title">لُعْبَة صَيْد المُدُن</h1>
@@ -462,8 +487,7 @@ path:hover {
     </div>
 
     <div id="game-screen" class="hidden">
-       
-        
+ 
         
 <svg baseprofile="tiny" fill="#6f9c76" height="422" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" version="1.2" viewbox="0 0 1000 422" width="1000" xmlns="http://www.w3.org/2000/svg">
  <g id="features">
@@ -854,32 +878,42 @@ const cityData = [
 
 let currentStep = 0;
 let shuffledCities = [];
-const limit = 18; 
+const limit = 18;
+
+// Ses Dosyası Eşleştirmeleri
+const audioFiles = {
+    "TR34": "istanbul", "TR06": "ankara", "TR33": "mersin",
+    "TR16": "bursa", "TR57": "sinop", "TR65": "wan",
+    "TR35": "izmir", "TR42": "konya", "TR72": "batman",
+    "TR21": "diyarbakir", "TR25": "erzurum", "TR38": "kayseri",
+    "TR03": "afyon", "TR61": "trabzon", "TR58": "sivas",
+    "TR55": "samsun", "TR07": "antalya", "TR47": "mardin"
+};
 
 function startGame() {
-    // Ekranları Değiştir
+    // Ekranları ayarla
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('game-screen').classList.remove('hidden');
 
-    // Geri Tuşu Ayarı
+    // Geri tuşu (nav-btn) her tıklandığında sayfayı yenileyerek temiz başlangıç yapar
     const navBtn = document.getElementById('nav-btn');
     if (navBtn) {
-        navBtn.onclick = function() { location.reload(); };
+        navBtn.onclick = function(e) {
+            e.preventDefault();
+            location.reload(); 
+        };
     }
 
-    // Şehirleri Karıştır ve Kopyala
+    // Şehirleri karıştır
     shuffledCities = [...cityData].sort(() => 0.5 - Math.random()).slice(0, limit);
 
-    // Harita Etkileşimlerini Bağla
+    // Harita etkileşimlerini başlat
     const paths = document.querySelectorAll('path');
     paths.forEach(path => {
         path.onclick = function() { handleCityClick(this.id); };
-        
-        // Temizlik
         path.classList.remove('highlight-city', 'answered-correct-fixed');
         path.style.fill = ""; 
 
-        // Listede olan tüm illeri oyun başında vurgula
         const isKnownCity = cityData.some(city => city.id === path.id);
         if (isKnownCity) {
             path.classList.add('highlight-city');
@@ -891,12 +925,10 @@ function startGame() {
 }
 
 function showQuestion() {
-    // Şehirler bittiğinde sonsuz döngü: Listeyi yeniden karıştır
     if (currentStep >= shuffledCities.length) {
         currentStep = 0;
         shuffledCities = [...cityData].sort(() => 0.5 - Math.random()).slice(0, limit);
         
-        // Yanlış tıklandığı için sönmüş vurguları geri getir (doğru bilinenler hariç)
         document.querySelectorAll('path').forEach(path => {
             const isKnownCity = cityData.some(city => city.id === path.id);
             if (isKnownCity && !path.classList.contains('answered-correct-fixed')) {
@@ -908,28 +940,18 @@ function showQuestion() {
     const currentCity = shuffledCities[currentStep];
     if (!currentCity) return;
 
-    // Arapça Soru Metni
     const targetWordElem = document.getElementById('target-word');
     if (targetWordElem) {
         targetWordElem.innerText = `أَيْن تَقَعُ مَدينَة ${currentCity.ar}؟`;
     }
     
-    // Ses Dosyası Yönetimi
-    const audioFiles = {
-        "TR34": "istanbul", "TR06": "ankara", "TR33": "mersin",
-        "TR16": "bursa", "TR57": "sinop", "TR65": "van",
-        "TR35": "izmir", "TR42": "konya", "TR72": "batman",
-        "TR21": "diyarbakir", "TR25": "erzurum", "TR38": "kayseri",
-        "TR03": "afyon", "TR61": "trabzon", "TR58": "sivas",
-        "TR55": "samsun", "TR07": "antalya", "TR47": "mardin"
-    };
-
+    // Şehir sesini çal
     const fileName = audioFiles[currentCity.id];
     if (fileName) {
         setTimeout(() => {
             const audio = new Audio(`${fileName}.mp3`);
-            audio.play().catch(e => console.log("Ses dosyası bulunamadı: " + fileName));
-        }, 1000);
+            audio.play().catch(e => console.log("Ses çalınamadı: " + fileName));
+        }, 800);
     }
 
     // İlerleme Çubuğu
@@ -946,25 +968,27 @@ function handleCityClick(clickedId) {
 
     const correctId = currentCity.id;
     const element = document.getElementById(clickedId);
-    
     if (!element) return;
 
-    // Çift tıklamayı engellemek için haritayı kilitle
-    document.getElementById('features').style.pointerEvents = 'none';
+    // Haritayı geçici olarak kilitle
+    const mapFeatures = document.getElementById('features');
+    if (mapFeatures) mapFeatures.style.pointerEvents = 'none';
 
     if (clickedId === correctId) {
-        // DOĞRU: Kremsi rengi sabitle
+        playSound('success');
+        // Doğru cevapta sınıfları güncelle
+        element.classList.remove('highlight-city');
         element.classList.add('answered-correct-fixed'); 
         currentStep++; 
-        setTimeout(() => {
-            showStudentOverlay("!أَحْسَنْت"); 
-        }, 600);
+        setTimeout(() => { showStudentOverlay("!أَحْسَنْت"); }, 600);
     } else {
-        // YANLIŞ: Vurguyu kaldır (sönsün)
-        element.classList.remove('highlight-city');
-        element.style.fill = ""; 
-        currentStep++; 
-        setTimeout(() => {
+        playSound('error');
+        // Yanlış cevapta rengi SİLMİYORUZ, sadece sallanma efekti veriyoruz
+        element.classList.add('wrong-shake');
+        
+        setTimeout(() => { 
+            element.classList.remove('wrong-shake'); // Sallanma bitince efekti temizle
+            currentStep++; // Bir sonraki soruya geç
             showStudentOverlay("لِلْأَسَف!"); 
         }, 600);
     }
@@ -972,12 +996,13 @@ function handleCityClick(clickedId) {
 
 function showStudentOverlay(msg) {
     const overlay = document.getElementById('student-overlay');
-    const msgElem = document.querySelector('.overlay-title');
+    const msgElem = document.getElementById('overlay-msg'); // ID üzerinden erişim daha güvenli
     
-    if (overlay && msgElem) {
-        msgElem.innerText = msg;
-        // Renk ayarı
-        msgElem.style.color = (msg === "!أَحْسَنْت") ? "var(--success)" : "var(--danger)";
+    if (overlay) {
+        if (msgElem) {
+            msgElem.innerText = msg;
+            msgElem.style.color = (msg === "!أَحْسَنْت") ? "var(--success)" : "var(--danger)";
+        }
         overlay.classList.remove('hidden');
     } else {
         closeOverlay();
@@ -989,29 +1014,42 @@ function closeOverlay() {
     if (overlay) overlay.classList.add('hidden');
     
     const mapFeatures = document.getElementById('features');
-    if (mapFeatures) mapFeatures.style.pointerEvents = 'all'; // Haritayı aç
+    if (mapFeatures) mapFeatures.style.pointerEvents = 'all'; 
     
     showQuestion();
 }
 
-function resetGame() {
-    location.reload();
+function playSound(type) {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.type = 'sine';
+
+        if (type === 'success') {
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.2);
+        } else {
+            oscillator.frequency.setValueAtTime(220, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.3);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.4);
+        }
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+    } catch(e) { console.log("Ses sitemi hatası."); }
 }
 
-function goToStartScreen() {
-    document.getElementById('game-screen').classList.add('hidden');
-    document.getElementById('result-screen').classList.add('hidden');
-    document.getElementById('start-screen').classList.remove('hidden');
-    
-    currentStep = 0;
-    const progressBar = document.getElementById('progress');
-    if (progressBar) progressBar.style.width = "0%";
-    
-    document.querySelectorAll('path').forEach(path => {
-        path.style.fill = "";
-        path.classList.remove('answered-correct-fixed', 'highlight-city');
-    });
-}
+// Başlangıçta ana sayfa butonunu doğru ayarla
+window.onload = function() {
+    const navBtn = document.getElementById('nav-btn');
+    if (navBtn) {
+        navBtn.onclick = function() { location.reload(); };
+    }
+};
 </script>
 </body>
 </html>
