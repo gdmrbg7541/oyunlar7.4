@@ -128,21 +128,50 @@
                 grid-template-columns: 1fr; /* Çok küçükse tek sütun */
             }
         }
+
+/* Mevcut CSS içindeki ilgili alanları bu kodla değiştirin */
+
+.grid-container {
+    display: grid;
+    width: 100%;
+    max-width: 800px;
+    gap: 20px;
+    /* Kartları 2 sütuna zorlar */
+    grid-template-columns: repeat(2, 1fr); 
+}
+
+.game-card {
+    background: var(--card-bg); 
+    border: 1px solid var(--border);
+    border-radius: 20px; 
+    padding: 25px 15px; 
+    text-align: center;
+    text-decoration: none; 
+    color: inherit; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    /* Genişlik ayarını temizler */
+    grid-column: auto !important; 
+}
+
+/* Varsa aşağıdaki nth-child bloklarını tamamen silin */
+.game-card:nth-child(4),
+.game-card:nth-child(5) {
+    grid-column: auto;
+}
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>الوَحْدَة الرّابِعَة</h1>
+        <h1>الوَحْدَة الثّالِثَة</h1>
         <p> أَلْعاب اللُّغَة العَرَبِيَّة </p>
     </div>
 
     <div class="grid-container">
-        
-
-        
-
-   
+       
         <a href="kelime.html" class="game-card">
             <div class="icon-circle">🎯</div>
             <h2>صَيْد الرُّموز</h2>
@@ -162,12 +191,6 @@
             <div class="icon-circle">🎧</div>
             <h2>اخْتِبار الاِسْتِماع</h2>
         </a>
-
-        <a href="hafizakarti.html" class="game-card">
-            <div class="icon-circle">🧠</div>
-            <h2>لُعْبَة الذّاكِرَة</h2>
-        </a>
-    </div>
     </div>
 
 </body>
