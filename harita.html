@@ -187,8 +187,6 @@
     .btn-main { padding: 15px 40px; font-size: 1.2rem; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 10px; }
 
 
-   /* Konteynır ve Ekran Güncelleme */
-<style>
     @font-face {
         font-family: 'Arakom';
         src: url('arakom.ttf') format('truetype');
@@ -260,6 +258,7 @@
     .progress-bar { width: 0%; height: 100%; background: var(--success); transition: width 0.4s ease; }
     
     .hidden { display: none !important; }
+    
 
     
 
@@ -412,8 +411,7 @@ path:hover {
 
 .overlay-text {
     font-size: 3.5rem;
-    margin-bottom: 30px;<div id="student-overlay" class="hidden">
-    
+    margin-bottom: 30px;
 }
 
 .next-btn {
@@ -449,6 +447,150 @@ path:hover {
     
 }
 
+/* Doğru / Yanlış Ekranı (T/F Mode) Tasarımı */
+#tf-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+}
+
+.tf-header {
+    text-align: center;
+    padding: 15px;
+    font-size: 3rem;
+    color: var(--primary);
+    font-weight: bold;
+    text-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.tf-arena {
+    display: flex;
+    flex: 1;
+    gap: 40px;
+    padding: 0 40px 20px 40px;
+}
+
+.tf-panel {
+    flex: 1;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 40px;
+    border: 4px solid #e2e8f0;
+}
+
+.tf-player-title {
+    font-size: 3.5rem;
+    color: #95a5a6;
+}
+
+.tf-question {
+    font-size: 4rem;
+    color: var(--primary);
+    text-align: center;
+    direction: rtl;
+    line-height: 1.4;
+}
+
+.tf-actions {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    justify-content: center;
+}
+
+.tf-btn {
+    font-size: 4rem;
+    padding: 20px 0;
+    width: 45%;
+    border-radius: 20px;
+    border: 4px solid #cbd5e0;
+    background: white;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tf-btn:hover:not(:disabled) {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.tf-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Doğru ve Yanlış Durumları */
+.tf-correct {
+    background: var(--success) !important;
+    color: white !important;
+    border-color: var(--success) !important;
+    box-shadow: 0 0 20px rgba(39, 174, 96, 0.4);
+}
+
+.tf-wrong {
+    background: var(--danger) !important;
+    color: white !important;
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
+}
+
+.tf-footer {
+    display: flex;
+    justify-content: center;
+    padding: 20px 40px 40px 40px;
+}
+
+.tf-next-btn {
+    background: #cbd5e0;
+    color: white;
+    border: none;
+    padding: 20px 80px;
+    font-size: 3rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.tf-next-btn.active {
+    background: var(--primary);
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(44, 62, 80, 0.2);
+}
+
+.tf-next-btn.active:hover {
+    background: var(--success);
+    transform: scale(1.05);
+}
+
+/* Yeni İleri / Geri Buton Tasarımı (Daha Küçük) */
+.tf-nav-btn {
+    background: #cbd5e0;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 2.2rem;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.tf-nav-btn.active {
+    background: var(--primary);
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2);
+}
+
+.tf-nav-btn.active:hover {
+    background: var(--success);
+    transform: scale(1.05);
+}
+
 
 </style>
 </head>
@@ -460,29 +602,73 @@ path:hover {
         <polyline points="9 22 9 12 15 12 15 22"></polyline>
     </svg>
 </a>
+
 <div id="student-overlay" class="hidden">
     <div class="overlay-content">
         <div class="overlay-title" id="overlay-msg" style="font-size: 7rem !important;">أَحْسَنْت</div>
-        <p class="overlay-text" style="font-size: 3.5rem !important;">الدَّوْر لِلطّالِب التّالي</p>
+        <p class="overlay-text" id="overlay-sub" style="font-size: 3.5rem !important;">إِجابَة صَحيحَة</p>
         <button class="next-btn" onclick="closeOverlay()">حَسَنًا</button>
     </div>
 </div>
 
-
-
 <div class="container">
+    
     <div id="start-screen" class="hero-wrapper">
         <div class="hero-content">
             <h1 class="hero-title">لُعْبَة صَيْد المُدُن</h1>
             <div class="hero-divider"></div>
-            <button class="hero-btn-large" onclick="startGame()">اِبْدَأْ</button>
+            <div style="display: flex; gap: 30px; margin-top: 20px;">
+                <button class="hero-btn-large" onclick="startGame()">خَريطَة المُدُن</button>
+                <button class="hero-btn-large" style="background: var(--success);" onclick="startTFGame()">صَح أَم خَطَأ</button>
+            </div>
         </div>
     </div>
 
-    <div id="game-screen" class="hidden">
+    <div id="tf-screen" class="hidden">
+        <div class="tf-header">اِقْرَأ المَعْلومَة وَاخْتَرْ (صَح) أَم (خَطَأ)‫.‬</div>
+        <div class="tf-arena">
+            <div class="tf-panel" id="p2-panel"><div style="display: flex; gap: 15px; justify-content: center; width: 100%; margin-bottom: 20px; direction: rtl;">
+    <div id="p1-bar-1" style="width: 100px; height: 15px; background: #e2e8f0; border-radius: 10px; transition: 0.4s ease;"></div>
+    <div id="p1-bar-2" style="width: 100px; height: 15px; background: #e2e8f0; border-radius: 10px; transition: 0.4s ease;"></div>
+    <div id="p1-bar-3" style="width: 100px; height: 15px; background: #e2e8f0; border-radius: 10px; transition: 0.4s ease;"></div>
+</div>
+                <div class="tf-question" id="p2-question">...</div>
+                <div class="tf-actions">
+                    
+                    <button class="tf-btn tf-false" onclick="answerTF(2, false)">خَطَأ</button>
+                    <button class="tf-btn tf-true" onclick="answerTF(2, true)">صَح</button>
+                </div>
+            </div>
+            <div class="tf-panel" id="p1-panel"><div style="display: flex; gap: 15px; justify-content: center; width: 100%; margin-bottom: 20px; direction: rtl;">
+    <div id="p2-bar-1" style="width: 100px; height: 15px; background: #e2e8f0; border-radius: 10px; transition: 0.4s ease;"></div>
+    <div id="p2-bar-2" style="width: 100px; height: 15px; background: #e2e8f0; border-radius: 10px; transition: 0.4s ease;"></div>
+    <div id="p2-bar-3" style="width: 100px; height: 15px; background: #e2e8f0; border-radius: 10px; transition: 0.4s ease;"></div>
+</div>
+                <div class="tf-question" id="p1-question">...</div>
+                <div class="tf-actions">
+                    
+                    <button class="tf-btn tf-false" onclick="answerTF(1, false)">خَطَأ</button>
+                    <button class="tf-btn tf-true" onclick="answerTF(1, true)">صَح</button>
+                </div>
+            </div>
+        </div>
+        
+<div class="tf-footer" style="gap: 20px;">
+            <button id="tf-prev-btn" class="tf-nav-btn" disabled onclick="prevTFTurn()">السَّابِق</button>
+            <button id="tf-next-btn" class="tf-nav-btn" disabled onclick="nextTFTurn()">التَّالي</button>
+        </div>
+    </div> <div id="game-screen" class="hidden">
+        
+        <div class="progress-bg">
+            <div id="progress" class="progress-bar"></div>
+        </div>
  
         
 <svg baseprofile="tiny" fill="#6f9c76" height="422" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" version="1.2" viewbox="0 0 1000 422" width="1000" xmlns="http://www.w3.org/2000/svg">
+
+
+
+
  <g id="features">
   <path d="M889.7 82.2l-3.1 1.1-4.8 2.7-7.7 3.3-7.8 3.3-5.7 3-1.1 4.8-0.7 7.5-0.9 4.5-5.7 0.6-5.5 1.1-1.4-2.6-1.9-1.9-1.4-2.1-1-2.4-1.3-1.7-1.8-1.2-2.4-3.7-1-4.9 3-5.9 4.1-4.6 4-2 1.2-4.2-1.3-4.4-0.9-2.3-0.4-0.7-0.5-1.5-0.3-2.7-0.7-3.6 0.5 0 1-0.7 1.4-2.2 1.1-1 0.5-1.1 0.4-2.6 0.5-1 0.9-0.8 0.1 0 0.2 0 0.9-0.4 2.4-0.2 6.7 0.6 0.9 0.4-0.4 0.6-0.1 0.7-0.1 0.6-0.2 0.6-0.4 0.4-1 0.8-0.4 0.7 1.3 0.7 0.9 1 0.9 0.3 1.1-1.4 0.7-0.4 0.3 0.4 0.3 0.8 0.4 0.7 0.3 0.3 1.4 0.4 0.3 0.3 0.2 0.3 0.2 0.2 0.5 0.2 0.3 0.4 1.4 2.7 0.7 0.8 3.5 2.4 2.3 2 1.5 0.7 1.4 0.2 0 0.3-0.6 0.9-0.7 0.6-2.6 1.3 1.3 0.4 1.1-0.1 0.9 0.1 1 1.1 1.1 2.8 0.7 0.5 4.4-1.2 1.3-0.1 1.5 0.4 1.3 0.8 1.3 1.2 0.7 1.5-0.5 1.6z" id="TR75" name="Ardahan">
   </path>
@@ -845,7 +1031,8 @@ path:hover {
 </div>
 
 <div class="arabic-word" id="target-word">...</div>
-
+    </div> </div> 
+<audio id="tf-ses" src="yonergedogruyanlis.mp3" preload="auto"></audio>
 <script>
 // 1. Şehir Verileri
 const cityData = [
@@ -873,7 +1060,6 @@ let currentStep = 0;
 let shuffledCities = [];
 const limit = 18;
 
-// Ses Dosyası Eşleştirmeleri
 const audioFiles = {
     "TR34": "istanbul", "TR06": "ankara", "TR33": "mersin",
     "TR16": "bursa", "TR57": "sinop", "TR65": "van",
@@ -884,33 +1070,22 @@ const audioFiles = {
 };
 
 function startGame() {
-    // Ekranları ayarla
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('game-screen').classList.remove('hidden');
 
-    // Geri tuşu (nav-btn) her tıklandığında sayfayı yenileyerek temiz başlangıç yapar
     const navBtn = document.getElementById('nav-btn');
-    if (navBtn) {
-        navBtn.onclick = function(e) {
-            e.preventDefault();
-            location.reload(); 
-        };
-    }
+    if (navBtn) navBtn.onclick = function(e) { e.preventDefault(); location.reload(); };
 
-    // Şehirleri karıştır
     shuffledCities = [...cityData].sort(() => 0.5 - Math.random()).slice(0, limit);
 
-    // Harita etkileşimlerini başlat
     const paths = document.querySelectorAll('path');
     paths.forEach(path => {
         path.onclick = function() { handleCityClick(this.id); };
-        path.classList.remove('highlight-city', 'answered-correct-fixed');
+        path.classList.remove('highlight-city', 'answered-correct-fixed', 'wrong-answer');
         path.style.fill = ""; 
 
         const isKnownCity = cityData.some(city => city.id === path.id);
-        if (isKnownCity) {
-            path.classList.add('highlight-city');
-        }
+        if (isKnownCity) path.classList.add('highlight-city');
     });
 
     currentStep = 0;
@@ -921,7 +1096,6 @@ function showQuestion() {
     if (currentStep >= shuffledCities.length) {
         currentStep = 0;
         shuffledCities = [...cityData].sort(() => 0.5 - Math.random()).slice(0, limit);
-        
         document.querySelectorAll('path').forEach(path => {
             const isKnownCity = cityData.some(city => city.id === path.id);
             if (isKnownCity && !path.classList.contains('answered-correct-fixed')) {
@@ -934,20 +1108,17 @@ function showQuestion() {
     if (!currentCity) return;
 
     const targetWordElem = document.getElementById('target-word');
-    if (targetWordElem) {
-        targetWordElem.innerText = `أَيْن تَقَعُ مَدينَة ${currentCity.ar}؟`;
-    }
+    if (targetWordElem) targetWordElem.innerText = `أَيْن تَقَعُ مَدينَة ${currentCity.ar}؟`;
     
-    // Şehir sesini çal
     const fileName = audioFiles[currentCity.id];
     if (fileName) {
         setTimeout(() => {
             const audio = new Audio(`${fileName}.mp3`);
-            audio.play().catch(e => console.log("Ses çalınamadı: " + fileName));
+            audio.play().catch(e => console.log("Ses çalınamadı"));
         }, 800);
     }
 
-    // İlerleme Çubuğu
+    // İlerleme Çizgisini Güncelle
     const progressBar = document.getElementById('progress');
     if (progressBar) {
         const progressWidth = (currentStep / limit) * 100;
@@ -959,43 +1130,46 @@ function handleCityClick(clickedId) {
     const currentCity = shuffledCities[currentStep];
     if (!currentCity) return;
 
-    const correctId = currentCity.id;
     const element = document.getElementById(clickedId);
     if (!element) return;
 
-    // Haritayı geçici olarak kilitle
     const mapFeatures = document.getElementById('features');
     if (mapFeatures) mapFeatures.style.pointerEvents = 'none';
 
-    if (clickedId === correctId) {
+    const isCorrect = (clickedId === currentCity.id);
+
+    if (isCorrect) {
         playSound('success');
-        // Doğru cevapta sınıfları güncelle
         element.classList.remove('highlight-city');
         element.classList.add('answered-correct-fixed'); 
-        currentStep++; 
-        setTimeout(() => { showStudentOverlay("!أَحْسَنْت"); }, 600);
     } else {
         playSound('error');
-        // Yanlış cevapta rengi SİLMİYORUZ, sadece sallanma efekti veriyoruz
-        element.classList.add('wrong-shake');
-        
-        setTimeout(() => { 
-            element.classList.remove('wrong-shake'); // Sallanma bitince efekti temizle
-            currentStep++; // Bir sonraki soruya geç
-            showStudentOverlay("لِلْأَسَف"); 
-        }, 600);
+        element.classList.add('wrong-answer');
     }
+
+    setTimeout(() => { 
+        if (!isCorrect) element.classList.remove('wrong-answer'); 
+        
+        showStudentOverlay(
+            isCorrect ? "!أَحْسَنْت" : "لِلْأَسَف", 
+            isCorrect ? "إِجابَة صَحيحَة" : "إِجابَة خاطِئَة"
+        ); 
+        
+        currentStep++;
+    }, 600);
 }
 
-function showStudentOverlay(msg) {
+function showStudentOverlay(title, subtitle) {
     const overlay = document.getElementById('student-overlay');
-    const msgElem = document.getElementById('overlay-msg'); // ID üzerinden erişim daha güvenli
+    const msgElem = document.getElementById('overlay-msg');
+    const subElem = document.getElementById('overlay-sub'); 
     
     if (overlay) {
         if (msgElem) {
-            msgElem.innerText = msg;
-            msgElem.style.color = (msg === "أَحْسَنْت") ? "var(--success)" : "var(--danger)";
+            msgElem.innerText = title;
+            msgElem.style.color = (title === "!أَحْسَنْت") ? "var(--success)" : "var(--danger)";
         }
+        if (subElem) subElem.innerText = subtitle;
         overlay.classList.remove('hidden');
     } else {
         closeOverlay();
@@ -1018,31 +1192,248 @@ function playSound(type) {
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
         oscillator.type = 'sine';
-
         if (type === 'success') {
             oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.2);
+            oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.2);
         } else {
             oscillator.frequency.setValueAtTime(220, audioCtx.currentTime);
             oscillator.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.3);
             gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.4);
+            oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.4);
         }
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
-    } catch(e) { console.log("Ses sitemi hatası."); }
+    } catch(e) { console.log("Ses sistemi hatası."); }
 }
 
-// Başlangıçta ana sayfa butonunu doğru ayarla
-window.onload = function() {
-    const navBtn = document.getElementById('nav-btn');
-    if (navBtn) {
-        navBtn.onclick = function() { location.reload(); };
+
+// ==========================================
+// YENİ: GİZLİ CEVAPLI DOĞRU/YANLIŞ MODU
+// ==========================================
+
+const tfData = [
+    // DOĞRU (صَح) CEVAPLI SORULAR
+    { q: "مَدينَة إِزْمير تَقَعُ في الغَرْب.", a: true }, // İzmir batıda yer alır.
+    { q: "مَدينَة أَنْطالِيا تَقَعُ في الجَنوب.", a: true }, // Antalya güneyde yer alır.
+    { q: "مَدينَة أَرْضُروم تَقَعُ في الشَّرْق.", a: true }, // Erzurum doğuda yer alır.
+    { q: "مَدينَة سامسون تَقَعُ في الشَّمال.", a: true }, // Samsun kuzeyde yer alır.
+    { q: "مَدينَة أَنْقَرَة تَقَعُ في الوَسَط.", a: true }, // Ankara merkezde/ortada yer alır.
+    { q: "مَدينَة سينوب تَقَعُ في الشَّمال.", a: true }, // Sinop kuzeyde yer alır.
+    { q: "مَدينَة ماردين تَقَعُ في الجَنوب.", a: true }, // Mardin güneyde yer alır.
+    { q: "مَدينَة قَيْصَري تَقَعُ في الوَسَط.", a: true }, // Kayseri merkezde/ortada yer alır.
+    
+    // YANLIŞ (خَطَأ) CEVAPLI SORULAR
+    { q: "مَدينَة وان تَقَعُ في الغَرْب.", a: false }, // Van batıda yer alır. (Yanlış - Doğudadır)
+    { q: "مَدينَة طرابزون تَقَعُ في الجَنوب.", a: false }, // Trabzon güneyde yer alır. (Yanlış - Kuzeydedir)
+    { q: "مَدينَة إِسْطَنْبول تَقَعُ في الشَّرْق.", a: false }, // İstanbul doğuda yer alır. (Yanlış - Batıdadır)
+    { q: "مَدينَة مَرْسين تَقَعُ في الشَّمال.", a: false }, // Mersin kuzeyde yer alır. (Yanlış - Güneydedir)
+    { q: "مَدينَة ديار بكر تَقَعُ في الغَرْب.", a: false }, // Diyarbakır batıda yer alır. (Yanlış - Doğudadır)
+    { q: "مَدينَة بورصَة تَقَعُ في الشَّرْق.", a: false }, // Bursa doğuda yer alır. (Yanlış - Batıdadır)
+    { q: "مَدينَة قونْيا تَقَعُ في الشَّمال.", a: false }, // Konya kuzeyde yer alır. (Yanlış - Merkezdedir)
+    { q: "مَدينَة باطْمان تَقَعُ في الغَرْب.", a: false }  // Batman batıda yer alır. (Yanlış - Doğudadır)
+];
+
+let currentTFIndex = 0;
+let p1Choice = null;
+let p2Choice = null;
+let tfHistory = {}; // YENİ: Geçmiş cevapları hafızada tutar
+
+function startTFGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('game-screen').classList.add('hidden');
+    document.getElementById('tf-screen').classList.remove('hidden');
+    
+    // YENİ: HTML içine gömülü hazır sesi çalma (En garantili yöntem)
+    const yonetgeSesi = document.getElementById('tf-ses');
+    if (yonetgeSesi) {
+        yonetgeSesi.currentTime = 0; // Sesi her ihtimale karşı başa sarar
+        yonetgeSesi.play().catch(e => console.log("Ses çalınamadı. Detay:", e));
     }
-};
+
+    const navBtn = document.getElementById('nav-btn');
+    if (navBtn) navBtn.onclick = function(e) { e.preventDefault(); location.reload(); };
+
+    tfData.sort(() => 0.5 - Math.random());
+    currentTFIndex = 0;
+    tfHistory = {}; 
+    loadTFQuestions();
+}
+
+function loadTFQuestions() {
+    p1Choice = null;
+    p2Choice = null;
+    
+    const q1 = tfData[currentTFIndex % tfData.length];
+    const q2 = tfData[(currentTFIndex + 1) % tfData.length];
+    
+    document.getElementById('p1-question').innerText = q1.q;
+    document.getElementById('p1-question').dataset.ans = q1.a;
+    
+    document.getElementById('p2-question').innerText = q2.q;
+    document.getElementById('p2-question').dataset.ans = q2.a;
+
+    // Hafızadan İlerleme Çubuklarını Kontrol Et
+    const currentRound = (currentTFIndex / 2) % 3; 
+    const blockStartIdx = Math.floor(currentTFIndex / 6) * 6; // O anki 3'lü grubun başlangıç noktası
+
+    for(let i = 0; i < 3; i++) {
+        const historyData = tfHistory[blockStartIdx + (i * 2)];
+        const b1 = document.getElementById(`p1-bar-${i + 1}`);
+        const b2 = document.getElementById(`p2-bar-${i + 1}`);
+        
+        if (b1 && b2) {
+            if (historyData) {
+                // Eğer bu soru daha önce çözüldüyse geçmiş rengi yükle
+                const q1Ans = tfData[(blockStartIdx + (i*2)) % tfData.length].a;
+                const q2Ans = tfData[(blockStartIdx + (i*2) + 1) % tfData.length].a;
+                
+                b1.style.background = (historyData.p1 === q1Ans) ? "var(--success)" : "var(--danger)";
+                b1.style.boxShadow = (historyData.p1 === q1Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+                
+                b2.style.background = (historyData.p2 === q2Ans) ? "var(--success)" : "var(--danger)";
+                b2.style.boxShadow = (historyData.p2 === q2Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+            } else if (i === currentRound) {
+                // O anki aktif çözülmemiş soru
+                b1.style.background = "var(--primary)";
+                b1.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
+                b2.style.background = "var(--primary)";
+                b2.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
+            } else {
+                // Henüz gelinmemiş soru
+                b1.style.background = "#e2e8f0";
+                b1.style.boxShadow = "none";
+                b2.style.background = "#e2e8f0";
+                b2.style.boxShadow = "none";
+            }
+        }
+    }
+
+    // Butonları temizle
+    document.querySelectorAll('.tf-btn').forEach(btn => {
+        btn.classList.remove('tf-correct', 'tf-wrong');
+        btn.style.background = "";
+        btn.style.borderColor = "";
+        btn.style.opacity = "1";
+        btn.disabled = false;
+    });
+
+    const nextBtn = document.getElementById('tf-next-btn');
+    const prevBtn = document.getElementById('tf-prev-btn');
+    
+    // İleri tuşu başlangıçta kapalı
+    nextBtn.disabled = true;
+    nextBtn.classList.remove('active');
+
+    // Geri tuşu (Sadece ilk soruda kapalı olur)
+    if (currentTFIndex >= 2) {
+        prevBtn.disabled = false;
+        prevBtn.classList.add('active');
+    } else {
+        prevBtn.disabled = true;
+        prevBtn.classList.remove('active');
+    }
+
+    // Eğer bu soruya daha önce cevap verilmişse, butonları otomatik boya
+    if (tfHistory[currentTFIndex]) {
+        p1Choice = tfHistory[currentTFIndex].p1;
+        p2Choice = tfHistory[currentTFIndex].p2;
+        revealTFAnswers(true); // true göndererek ses çalmasını engelliyoruz
+    }
+}
+
+function answerTF(player, choice) {
+    if (player === 1 && p1Choice !== null) return;
+    if (player === 2 && p2Choice !== null) return;
+
+    const btnPanel = document.getElementById(`p${player}-panel`);
+    const clickedBtn = btnPanel.querySelector(choice ? '.tf-true' : '.tf-false');
+    
+    clickedBtn.style.background = "#e2e8f0";
+    clickedBtn.style.borderColor = "var(--primary)";
+    
+    if (player === 1) p1Choice = choice;
+    if (player === 2) p2Choice = choice;
+
+    btnPanel.querySelectorAll('.tf-btn').forEach(b => {
+        b.disabled = true;
+        if(b !== clickedBtn) b.style.opacity = "0.4";
+    });
+
+    // İki taraf da cevaplayınca hafızaya kaydet ve sonuçları göster
+    if (p1Choice !== null && p2Choice !== null) {
+        tfHistory[currentTFIndex] = { p1: p1Choice, p2: p2Choice };
+        setTimeout(() => revealTFAnswers(false), 250);
+    }
+}
+
+function revealTFAnswers(isFromHistory = false) {
+    const q1Elem = document.getElementById('p1-question');
+    const q2Elem = document.getElementById('p2-question');
+    
+    const ans1 = q1Elem.dataset.ans === "true";
+    const ans2 = q2Elem.dataset.ans === "true";
+
+    const p1Correct = (p1Choice === ans1);
+    const p2Correct = (p2Choice === ans2);
+
+    document.querySelectorAll('.tf-btn').forEach(btn => btn.disabled = true);
+
+    function applyColors(player, isCorrect, correctAns) {
+        const pPanel = document.getElementById(`p${player}-panel`);
+        const selectedBtn = pPanel.querySelector(player === 1 ? (p1Choice ? '.tf-true' : '.tf-false') : (p2Choice ? '.tf-true' : '.tf-false'));
+        
+        selectedBtn.style.background = "";
+        selectedBtn.style.borderColor = "";
+        selectedBtn.style.opacity = "1";
+        
+        if (isCorrect) {
+            selectedBtn.classList.add('tf-correct');
+        } else {
+            selectedBtn.classList.add('tf-wrong');
+            const correctBtn = pPanel.querySelector(correctAns ? '.tf-true' : '.tf-false');
+            correctBtn.classList.add('tf-correct');
+            correctBtn.style.opacity = "1"; 
+        }
+    }
+
+    applyColors(1, p1Correct, ans1);
+    applyColors(2, p2Correct, ans2);
+
+    const currentRound = (currentTFIndex / 2) % 3;
+    const p1Bar = document.getElementById(`p1-bar-${currentRound + 1}`);
+    const p2Bar = document.getElementById(`p2-bar-${currentRound + 1}`);
+
+    if(p1Bar) {
+        p1Bar.style.background = p1Correct ? "var(--success)" : "var(--danger)";
+        p1Bar.style.boxShadow = p1Correct ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+    }
+    if(p2Bar) {
+        p2Bar.style.background = p2Correct ? "var(--success)" : "var(--danger)";
+        p2Bar.style.boxShadow = p2Correct ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+    }
+
+    if (!isFromHistory) {
+        if (p1Correct || p2Correct) playSound('success');
+        else playSound('error');
+    }
+
+    const nextBtn = document.getElementById('tf-next-btn');
+    nextBtn.disabled = false;
+    nextBtn.classList.add('active');
+}
+
+function nextTFTurn() {
+    currentTFIndex += 2;
+    loadTFQuestions();
+}
+
+function prevTFTurn() {
+    if (currentTFIndex >= 2) {
+        currentTFIndex -= 2;
+        loadTFQuestions();
+    }
+}
 </script>
 </body>
 </html>
