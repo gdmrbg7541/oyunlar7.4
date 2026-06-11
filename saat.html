@@ -175,7 +175,18 @@
         .hidden { display: none !important; }
 
         #singleGame { flex-direction: row-reverse; gap: 40px; align-items: center; padding: 60px; }
-        .s-digital-section { flex: 1.4; display: flex; flex-direction: column; align-items: center; background: #fff; border-radius: 40px; padding: 40px; border: 2px solid #eef2ff; height: 80%; justify-content: center; }
+        .s-digital-section { 
+    flex: 0.8; /* 1.4'ten 0.8'e düşürdük, böylece kutu yatayda daralacak */
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    background: #fff; 
+    border-radius: 40px; 
+    padding: 40px; 
+    border: 2px solid #eef2ff; 
+    height: 80%; 
+    justify-content: center; 
+}
         .s-options-section { flex: 1; display: flex; flex-direction: column; gap: 15px; }
         
         .clock-label-big { font-size: 5rem; color: var(--accent); font-weight: bold; margin-bottom: 20px; }
@@ -253,10 +264,9 @@
 </head>
 <body>
 
-  <audio id="audioMain" src="yonergesaat.mp3"></audio> 
-    <audio id="audioClick" src="https://assets.mixkit.co/active_storage/sfx/2588/2588-preview.mp3"></audio>
-    <audio id="audioCorrect" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3"></audio>
-    <audio id="audioWrong" src="https://assets.mixkit.co/active_storage/sfx/2569/2569-preview.mp3"></audio>
+<audio id="audioMain" src="yonergesaat.mp3"></audio> 
+    
+ 
 
     <a href="index.html" class="nav-btn back-home" id="homeBtn" title="الرئيسية">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -400,8 +410,52 @@ const data = [
     let clockFormat = "digital"; 
 
     function playS(id) { 
-        const a = document.getElementById(id); 
-        if(a){ a.currentTime=0; a.play(); } 
+        // 1. Ana Yönerge Sesi (Sizin yüklediğiniz mp3)
+        if (id === 'audioMain') {
+            const a = document.getElementById(id); 
+            if(a){ 
+                a.currentTime = 0; 
+                a.play().catch(e => console.log("Yönerge engellendi: ", e)); 
+            }
+            return;
+        }
+
+        // 2. Tıklama, Doğru ve Yanlış Sesleri (Dış link kullanılmaz, tarayıcı kendi üretir)
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            if (id === 'audioClick' || id === 'audioDial') {
+                // Basit ve kısa bir "Tık" sesi
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                osc.start(); osc.stop(ctx.currentTime + 0.08);
+            } 
+            else if (id === 'audioCorrect') {
+                // Doğru cevap: Zarif bir "Ding" sesi
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                osc.start(); osc.stop(ctx.currentTime + 0.4);
+            } 
+            else if (id === 'audioWrong') {
+                // Yanlış cevap: Kısa bir "Bızz" (Hata) sesi
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc.start(); osc.stop(ctx.currentTime + 0.3);
+            }
+        } catch(e) { 
+            console.log("Tarayıcınız ses sentezini desteklemiyor."); 
+        }
     }
 
     function toggleClockFormat() {
@@ -418,6 +472,8 @@ const data = [
             updateClockDisplay('p2-time', p2.currentQ, "duel");
         }
     }
+
+    
 
 // Yepyeni, Minimalist ve Modern SVG Saat Tasarımı (Animasyonları Güncellendi)
     function createRealisticSVGClock() {
@@ -585,7 +641,7 @@ const data = [
         }
     }
 
-    function loadSingle() {
+function loadSingle() {
         if(p1.current >= TOTAL) { showWinner("single"); return; }
         
         const q = data[Math.floor(Math.random()*data.length)];
@@ -601,15 +657,21 @@ const data = [
         opts.forEach(o => {
             const b = document.createElement('div'); b.className='s-opt-btn'; b.textContent=o;
             b.onclick = () => {
-                if(p1.selection) return; p1.selection=true;
+                if(p1.selection) return; 
+                p1.selection = true;
+                
+                playS('audioClick'); // YENİ: Tek kişilik moda tıklama sesi eklendi
+
                 const segments = document.getElementById('s-prog').children;
                 if(o === q.a) { 
-                    b.classList.add('correct'); playS('audioCorrect'); 
+                    b.classList.add('correct'); 
+                    setTimeout(() => playS('audioCorrect'), 150); // Çakışmaması için hafif gecikmeli doğru sesi
                     p1.score += 20;
                     document.getElementById('s-score').textContent = p1.score;
                     if(segments[p1.current]) segments[p1.current].style.background = 'var(--correct)';
                 } else { 
-                    b.classList.add('wrong'); playS('audioWrong'); 
+                    b.classList.add('wrong'); 
+                    setTimeout(() => playS('audioWrong'), 150); // Çakışmaması için hafif gecikmeli yanlış sesi
                     if(segments[p1.current]) segments[p1.current].style.background = 'var(--wrong)';
                 }
                 setTimeout(() => { p1.selection=null; p1.current++; loadSingle(); }, 1200);
