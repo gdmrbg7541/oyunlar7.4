@@ -619,13 +619,13 @@ path:hover {
             <div class="hero-divider"></div>
             <div style="display: flex; gap: 30px; margin-top: 20px;">
                 <button class="hero-btn-large" onclick="startGame()">خَريطَة المُدُن</button>
-                <button class="hero-btn-large" style="background: var(--success);" onclick="startTFGame()">صَح أَم خَطَأ</button>
+                <button class="hero-btn-large" style="background: var(--success);" onclick="startTFGame()">صَحّ أَم خَطَأ</button>
             </div>
         </div>
     </div>
 
     <div id="tf-screen" class="hidden">
-        <div class="tf-header">اِقْرَأ المَعْلومَة وَاخْتَرْ (صَح) أَم (خَطَأ)‫.‬</div>
+        <div class="tf-header">اِقْرَأ المَعْلومَة وَاخْتَرْ (صَحّ) أَم (خَطَأ)‫.‬</div>
         <div class="tf-arena">
             <div class="tf-panel" id="p2-panel"><div style="display: flex; gap: 15px; justify-content: center; width: 100%; margin-bottom: 20px; direction: rtl;">
     <div id="p1-bar-1" style="width: 100px; height: 15px; background: #e2e8f0; border-radius: 10px; transition: 0.4s ease;"></div>
@@ -636,7 +636,7 @@ path:hover {
                 <div class="tf-actions">
                     
                     <button class="tf-btn tf-false" onclick="answerTF(2, false)">خَطَأ</button>
-                    <button class="tf-btn tf-true" onclick="answerTF(2, true)">صَح</button>
+                    <button class="tf-btn tf-true" onclick="answerTF(2, true)"> صَحّ </button>
                 </div>
             </div>
             <div class="tf-panel" id="p1-panel"><div style="display: flex; gap: 15px; justify-content: center; width: 100%; margin-bottom: 20px; direction: rtl;">
@@ -648,7 +648,7 @@ path:hover {
                 <div class="tf-actions">
                     
                     <button class="tf-btn tf-false" onclick="answerTF(1, false)">خَطَأ</button>
-                    <button class="tf-btn tf-true" onclick="answerTF(1, true)">صَح</button>
+                    <button class="tf-btn tf-true" onclick="answerTF(1, true)">صَحّ</button>
                 </div>
             </div>
         </div>
@@ -1213,25 +1213,25 @@ function playSound(type) {
 // ==========================================
 
 const tfData = [
-    // DOĞRU (صَح) CEVAPLI SORULAR
-    { q: "مَدينَة إِزْمير تَقَعُ في الغَرْب.", a: true }, // İzmir batıda yer alır.
-    { q: "مَدينَة أَنْطالِيا تَقَعُ في الجَنوب.", a: true }, // Antalya güneyde yer alır.
-    { q: "مَدينَة أَرْضُروم تَقَعُ في الشَّرْق.", a: true }, // Erzurum doğuda yer alır.
-    { q: "مَدينَة سامسون تَقَعُ في الشَّمال.", a: true }, // Samsun kuzeyde yer alır.
-    { q: "مَدينَة أَنْقَرَة تَقَعُ في الوَسَط.", a: true }, // Ankara merkezde/ortada yer alır.
-    { q: "مَدينَة سينوب تَقَعُ في الشَّمال.", a: true }, // Sinop kuzeyde yer alır.
-    { q: "مَدينَة ماردين تَقَعُ في الجَنوب.", a: true }, // Mardin güneyde yer alır.
-    { q: "مَدينَة قَيْصَري تَقَعُ في الوَسَط.", a: true }, // Kayseri merkezde/ortada yer alır.
+    // DOĞRU (صَحّ) CEVAPLI SORULAR
+    { q: "إِزْمير تَقَعُ في غَرْب تُرْكِيا.", a: true }, // İzmir batıda yer alır.
+    { q: "أَنْطالِيا تَقَعُ في جَنوب تُرْكِيا.", a: true }, // Antalya güneyde yer alır.
+    { q: "أَرْضُروم تَقَعُ في شَرْق تُرْكِيا.", a: true }, // Erzurum doğuda yer alır.
+    { q: "سامْسون تَقَعُ في شَمال تُرْكِيا.", a: true }, // Samsun kuzeyde yer alır.
+    { q: "أَنْقَرَة تَقَعُ في وَسَط تُرْكِيا.", a: true }, // Ankara merkezde/ortada yer alır.
+    { q: "سينوب تَقَعُ في شَمال تُرْكِيا.", a: true }, // Sinop kuzeyde yer alır.
+    { q: "ماردين تَقَعُ في جَنوب تُرْكِيا.", a: true }, // Mardin güneyde yer alır.
+    { q: "قَيْصَري تَقَعُ في وَسَط تُرْكِيا.", a: true }, // Kayseri merkezde/ortada yer alır.
     
     // YANLIŞ (خَطَأ) CEVAPLI SORULAR
-    { q: "مَدينَة وان تَقَعُ في الغَرْب.", a: false }, // Van batıda yer alır. (Yanlış - Doğudadır)
-    { q: "مَدينَة طرابزون تَقَعُ في الجَنوب.", a: false }, // Trabzon güneyde yer alır. (Yanlış - Kuzeydedir)
-    { q: "مَدينَة إِسْطَنْبول تَقَعُ في الشَّرْق.", a: false }, // İstanbul doğuda yer alır. (Yanlış - Batıdadır)
-    { q: "مَدينَة مَرْسين تَقَعُ في الشَّمال.", a: false }, // Mersin kuzeyde yer alır. (Yanlış - Güneydedir)
-    { q: "مَدينَة ديار بكر تَقَعُ في الغَرْب.", a: false }, // Diyarbakır batıda yer alır. (Yanlış - Doğudadır)
-    { q: "مَدينَة بورصَة تَقَعُ في الشَّرْق.", a: false }, // Bursa doğuda yer alır. (Yanlış - Batıdadır)
-    { q: "مَدينَة قونْيا تَقَعُ في الشَّمال.", a: false }, // Konya kuzeyde yer alır. (Yanlış - Merkezdedir)
-    { q: "مَدينَة باطْمان تَقَعُ في الغَرْب.", a: false }  // Batman batıda yer alır. (Yanlış - Doğudadır)
+    { q: "وان تَقَعُ في غَرْب تُرْكِيا.", a: false }, // Van batıda yer alır. (Yanlış - Doğudadır)
+    { q: "طرابزون تَقَعُ في جَنوب تُرْكِيا.", a: false }, // Trabzon güneyde yer alır. (Yanlış - Kuzeydedir)
+    { q: "إِسْطَنْبول تَقَعُ في شَرْق تُرْكِيا.", a: false }, // İstanbul doğuda yer alır. (Yanlış - Batıdadır)
+    { q: "مَرْسين تَقَعُ في شَمال تُرْكِيا.", a: false }, // Mersin kuzeyde yer alır. (Yanlış - Güneydedir)
+    { q: "دِيار بَكِر تَقَعُ في غَرْب تُرْكِيا.", a: false }, // Diyarbakır batıda yer alır. (Yanlış - Doğudadır)
+    { q: "بورصَة تَقَعُ في شَرْق تُرْكِيا.", a: false }, // Bursa doğuda yer alır. (Yanlış - Batıdadır)
+    { q: "قونْيا تَقَعُ في شَمال تُرْكِيا.", a: false }, // Konya kuzeyde yer alır. (Yanlış - Merkezdedir)
+    { q: "باطْمان تَقَعُ في غَرْب تُرْكِيا.", a: false }  // Batman batıda yer alır. (Yanlış - Doğudadır)
 ];
 
 let currentTFIndex = 0;
@@ -1275,7 +1275,7 @@ function loadTFQuestions() {
 
     // Hafızadan İlerleme Çubuklarını Kontrol Et
     const currentRound = (currentTFIndex / 2) % 3; 
-    const blockStartIdx = Math.floor(currentTFIndex / 6) * 6; // O anki 3'lü grubun başlangıç noktası
+    const blockStartIdx = Math.floor(currentTFIndex / 6) * 6;
 
     for(let i = 0; i < 3; i++) {
         const historyData = tfHistory[blockStartIdx + (i * 2)];
@@ -1284,23 +1284,18 @@ function loadTFQuestions() {
         
         if (b1 && b2) {
             if (historyData) {
-                // Eğer bu soru daha önce çözüldüyse geçmiş rengi yükle
                 const q1Ans = tfData[(blockStartIdx + (i*2)) % tfData.length].a;
                 const q2Ans = tfData[(blockStartIdx + (i*2) + 1) % tfData.length].a;
-                
                 b1.style.background = (historyData.p1 === q1Ans) ? "var(--success)" : "var(--danger)";
                 b1.style.boxShadow = (historyData.p1 === q1Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
-                
                 b2.style.background = (historyData.p2 === q2Ans) ? "var(--success)" : "var(--danger)";
                 b2.style.boxShadow = (historyData.p2 === q2Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
             } else if (i === currentRound) {
-                // O anki aktif çözülmemiş soru
                 b1.style.background = "var(--primary)";
                 b1.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
                 b2.style.background = "var(--primary)";
                 b2.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
             } else {
-                // Henüz gelinmemiş soru
                 b1.style.background = "#e2e8f0";
                 b1.style.boxShadow = "none";
                 b2.style.background = "#e2e8f0";
@@ -1309,7 +1304,7 @@ function loadTFQuestions() {
         }
     }
 
-    // Butonları temizle
+    // Butonları temizle ve aktif et
     document.querySelectorAll('.tf-btn').forEach(btn => {
         btn.classList.remove('tf-correct', 'tf-wrong');
         btn.style.background = "";
@@ -1321,24 +1316,14 @@ function loadTFQuestions() {
     const nextBtn = document.getElementById('tf-next-btn');
     const prevBtn = document.getElementById('tf-prev-btn');
     
-    // İleri tuşu başlangıçta kapalı
-    nextBtn.disabled = true;
-    nextBtn.classList.remove('active');
-
-    // Geri tuşu (Sadece ilk soruda kapalı olur)
-    if (currentTFIndex >= 2) {
-        prevBtn.disabled = false;
-        prevBtn.classList.add('active');
-    } else {
-        prevBtn.disabled = true;
-        prevBtn.classList.remove('active');
-    }
-
-    // Eğer bu soruya daha önce cevap verilmişse, butonları otomatik boya
-    if (tfHistory[currentTFIndex]) {
-        p1Choice = tfHistory[currentTFIndex].p1;
-        p2Choice = tfHistory[currentTFIndex].p2;
-        revealTFAnswers(true); // true göndererek ses çalmasını engelliyoruz
+    // Geri tuşunu tamamen gizle (Artık kullanılmayacak)
+    if (prevBtn) prevBtn.style.display = "none";
+    
+    // İleri tuşunu gizle (Sadece 3. soruda görünecek)
+    if (nextBtn) {
+        nextBtn.style.display = "none";
+        nextBtn.disabled = true;
+        nextBtn.classList.remove('active');
     }
 }
 
@@ -1346,26 +1331,69 @@ function answerTF(player, choice) {
     if (player === 1 && p1Choice !== null) return;
     if (player === 2 && p2Choice !== null) return;
 
-    const btnPanel = document.getElementById(`p${player}-panel`);
-    const clickedBtn = btnPanel.querySelector(choice ? '.tf-true' : '.tf-false');
-    
-    clickedBtn.style.background = "#e2e8f0";
-    clickedBtn.style.borderColor = "var(--primary)";
-    
     if (player === 1) p1Choice = choice;
     if (player === 2) p2Choice = choice;
 
-    btnPanel.querySelectorAll('.tf-btn').forEach(b => {
+    const pPanel = document.getElementById(`p${player}-panel`);
+    const qElem = document.getElementById(`p${player}-question`);
+    const correctAns = qElem.dataset.ans === "true";
+    const isCorrect = (choice === correctAns);
+
+    // Seçim yapıldıktan sonra butonları kilitle ve seçilmeyeni soluklaştır
+    pPanel.querySelectorAll('.tf-btn').forEach(b => {
         b.disabled = true;
-        if(b !== clickedBtn) b.style.opacity = "0.4";
+        b.style.opacity = "0.4"; 
+        b.style.background = "";
+        b.style.borderColor = "";
     });
 
-    // İki taraf da cevaplayınca hafızaya kaydet ve sonuçları göster
+    const selectedBtn = pPanel.querySelector(choice ? '.tf-true' : '.tf-false');
+    selectedBtn.style.opacity = "1";
+    
+    if (isCorrect) {
+        selectedBtn.classList.add('tf-correct');
+        playSound('success');
+    } else {
+        selectedBtn.classList.add('tf-wrong');
+        const actualCorrectBtn = pPanel.querySelector(correctAns ? '.tf-true' : '.tf-false');
+        actualCorrectBtn.classList.add('tf-correct');
+        actualCorrectBtn.style.opacity = "1";
+        playSound('error');
+    }
+
+    const currentRound = (currentTFIndex / 2) % 3;
+    const pBar = document.getElementById(`p${player}-bar-${currentRound + 1}`);
+    if (pBar) {
+        pBar.style.background = isCorrect ? "var(--success)" : "var(--danger)";
+        pBar.style.boxShadow = isCorrect ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+    }
+
+    // İki oyuncu da cevap verdiğinde turun bittiğini anlıyoruz
     if (p1Choice !== null && p2Choice !== null) {
         tfHistory[currentTFIndex] = { p1: p1Choice, p2: p2Choice };
-        setTimeout(() => revealTFAnswers(false), 250);
+        
+        if (currentRound < 2) {
+            // 1. veya 2. soruysa, sonucu görmeleri için 1.5 saniye bekle ve otomatik geç
+            setTimeout(() => {
+                nextTFTurn();
+            }, 1500);
+        } else {
+            // 3. soru bittiyse (1 tur tamamlandı), "Sonraki Öğrenciler" tuşunu ortaya çıkar
+            const nextBtn = document.getElementById('tf-next-btn');
+            if (nextBtn) {
+                nextBtn.style.display = "block";
+                nextBtn.disabled = false;
+                nextBtn.classList.add('active');
+            }
+        }
     }
 }
+
+function nextTFTurn() {
+    currentTFIndex += 2;
+    loadTFQuestions();
+}
+
 
 function revealTFAnswers(isFromHistory = false) {
     const q1Elem = document.getElementById('p1-question');
@@ -1423,10 +1451,6 @@ function revealTFAnswers(isFromHistory = false) {
     nextBtn.classList.add('active');
 }
 
-function nextTFTurn() {
-    currentTFIndex += 2;
-    loadTFQuestions();
-}
 
 function prevTFTurn() {
     if (currentTFIndex >= 2) {
