@@ -407,56 +407,64 @@ const data = [
     let p2 = { score: 0, current: 0, selection: null, time: 0, correct: false, btn: null, currentQ: null };
     const TOTAL = 5; 
     let currentGameMode = ""; 
+    let audioCtx = null;
     let clockFormat = "digital"; 
 
     function playS(id) { 
-        // 1. Ana Yönerge Sesi (Sizin yüklediğiniz mp3)
-        if (id === 'audioMain') {
-            const a = document.getElementById(id); 
-            if(a){ 
-                a.currentTime = 0; 
-                a.play().catch(e => console.log("Yönerge engellendi: ", e)); 
-            }
-            return;
+    // 1. Ana Yönerge Sesi
+    if (id === 'audioMain') {
+        const a = document.getElementById(id); 
+        if(a){ 
+            a.currentTime = 0; 
+            a.play().catch(e => console.log("Yönerge engellendi: ", e)); 
         }
-
-        // 2. Tıklama, Doğru ve Yanlış Sesleri (Dış link kullanılmaz, tarayıcı kendi üretir)
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            
-            if (id === 'audioClick' || id === 'audioDial') {
-                // Basit ve kısa bir "Tık" sesi
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, ctx.currentTime);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
-                osc.start(); osc.stop(ctx.currentTime + 0.08);
-            } 
-            else if (id === 'audioCorrect') {
-                // Doğru cevap: Zarif bir "Ding" sesi
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-                osc.start(); osc.stop(ctx.currentTime + 0.4);
-            } 
-            else if (id === 'audioWrong') {
-                // Yanlış cevap: Kısa bir "Bızz" (Hata) sesi
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, ctx.currentTime);
-                gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-                osc.start(); osc.stop(ctx.currentTime + 0.3);
-            }
-        } catch(e) { 
-            console.log("Tarayıcınız ses sentezini desteklemiyor."); 
-        }
+        return;
     }
+
+    // 2. Tıklama, Doğru ve Yanlış Sesleri
+    try {
+        // SES MOTORUNU SADECE BİR KERE OLUŞTUR (HAYAT KURTARAN DÜZELTME BURA)
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        // Tarayıcı saati üzerinden hassas zamanlama
+        const now = audioCtx.currentTime;
+        
+        if (id === 'audioClick' || id === 'audioDial') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+            osc.start(now); 
+            osc.stop(now + 0.08);
+        } 
+        else if (id === 'audioCorrect') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, now);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc.start(now); 
+            osc.stop(now + 0.4);
+        } 
+        else if (id === 'audioWrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, now);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now); 
+            osc.stop(now + 0.3);
+        }
+    } catch(e) { 
+        console.log("Tarayıcınız ses sentezini desteklemiyor veya engelledi.", e); 
+    }
+}
 
     function toggleClockFormat() {
         const isAnalog = document.getElementById('clockTypeToggle').checked;
