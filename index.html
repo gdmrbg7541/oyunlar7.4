@@ -81,11 +81,11 @@
 
         .main-container {
             width: 100%;
-            max-width: 850px; 
+            max-width: 950px; /* 3 kartın rahat sığması için 850'den 950'ye çıkarıldı */
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: clamp(15px, 4vh, 45px); /* Mobilde boşluklar daha agresif kısıldı */
+            gap: clamp(15px, 4vh, 45px);
             z-index: 10;
         }
 
@@ -131,7 +131,7 @@
             opacity: 0.8;
         }
 
-        /* Kartlar İçin Agresif Esnek Izgara */
+       /* Kartlar İçin Agresif Esnek Izgara */
         .grid-container {
             display: flex;
             flex-wrap: wrap; 
@@ -149,7 +149,7 @@
             -webkit-backdrop-filter: blur(12px);
             border: 2px solid rgba(255, 255, 255, 1);
             border-radius: clamp(20px, 4vw, 30px); 
-            padding: clamp(10px, 4vw, 25px); /* Mobilde iç boşluklar agresif kısıldı */
+            padding: clamp(10px, 4vw, 25px); 
             text-align: center;
             text-decoration: none; 
             color: var(--primary); 
@@ -157,15 +157,19 @@
             flex-direction: column; 
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 30px rgba(15, 118, 110, 0.04);
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.04);
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             
-            flex: 1 1 calc(45% - 25px); /* 4 kart olduğu için 2x2 düzeni korur */
-            max-width: 380px;
-            min-width: clamp(120px, 35%, 240px); /* Mobilde daralır */
+            /* --- YENİ EKLENEN/DEĞİŞEN KISIM --- */
+            flex: 0 0 30%; /* Kartların esnemesini durdurup ilk satıra tam 3 adet sığdırır */
+            max-width: 280px; /* Kartın aşırı büyümesini engeller */
+            min-width: 200px; /* Kartın aşırı küçülmesini engeller */
+            /* --------------------------------- */
+
             min-height: clamp(120px, 18vh, 190px);
             z-index: 1;
         }
+
 
         .game-card::before {
             content: attr(data-num);
@@ -304,12 +308,17 @@
                 <h2>صَيْد الرُّموز</h2>
             </a>
 
-            <a href="saat.html" class="game-card" data-num="3">
+            <a href="evethayir.html" class="game-card" data-num="3">
+                <div class="icon-circle">✅</div>
+                <h2>مُسابَقَة نَعَم أَو لا</h2>
+            </a>
+
+            <a href="saat.html" class="game-card" data-num="4">
                 <div class="icon-circle">⏰</div>
                 <h2>قِراءَة السّاعَة</h2>
             </a>
 
-            <a href="harita.html" class="game-card" data-num="4">
+            <a href="harita.html" class="game-card" data-num="5">
                 <div class="icon-circle">🗺️</div>
                 <h2>لُعْبَة صَيْد المُدُن</h2>
             </a>
