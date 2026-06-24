@@ -616,8 +616,8 @@
             playerX = nextX;
             playerY = nextY;
 
-            if(dir === 'left') playerEl.style.transform = `translate(${playerX * cellSize}px, ${playerY * cellSize}px) scaleX(-1)`;
-            else playerEl.style.transform = `translate(${playerX * cellSize}px, ${playerY * cellSize}px) scaleX(1)`;
+            if(dir === 'left') playerEl.style.transform = `translate(${playerX * cellSize}px, ${playerY * cellSize}px) scaleX(1)`;
+            else playerEl.style.transform = `translate(${playerX * cellSize}px, ${playerY * cellSize}px) scaleX(-1)`;
 
             // Hedefe ulaşıldı mı?
             if(playerX === levelData.targetX && playerY === levelData.targetY) {
