@@ -285,13 +285,15 @@ path:hover {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: space-evenly !important;
+        justify-content: space-between !important;
+        padding-top: 50px !important;
+        padding-bottom: 30px !important;
         flex: 1 !important;
         width: 100% !important;
         height: 100% !important;
     }
     svg {
-        max-height: 60vh !important;
+        max-height: 70vh !important;
         margin: 0 !important;
     }
     .arabic-word {
@@ -349,20 +351,20 @@ path:hover {
     /* Şehir Avı Ekranı */
     #game-screen:not(.hidden) {
         display: flex !important;
-        flex-direction: row !important;
+        flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
         flex: 1 !important;
         width: 100% !important;
         height: 100% !important;
-        gap: 20px !important;
-        padding: 0 20px !important;
+        gap: 15px !important;
+        padding: 5px !important;
     }
     svg {
-        max-height: 85vh !important;
-        max-width: 60vw !important;
+        max-height: 55vh !important;
+        max-width: 90vw !important;
         margin: 0 !important;
-        flex: 1 !important;
+        flex: unset !important;
     }
     .arabic-word {
         position: relative !important;
@@ -371,7 +373,7 @@ path:hover {
         right: auto !important;
         font-size: clamp(1.5rem, 8vh, 3.5rem) !important;
         line-height: 1.2 !important;
-        flex: 1 !important;
+        flex: unset !important;
         margin: 0 !important;
     }
     .compass-box {
@@ -389,8 +391,14 @@ path:hover {
         height: 100% !important;
     }
     .tf-header { font-size: clamp(1.2rem, 5vh, 2rem) !important; padding: 5px !important; margin: 0 !important; }
-    .tf-arena { flex-direction: row !important; gap: 10px !important; padding: 5px 10px !important; flex: 0 1 auto !important; margin: 0 !important; }
-    .tf-panel { padding: 5px 10px !important; border-width: 1px !important; justify-content: space-around !important; gap: 5px !important; }
+    .tf-arena { flex-direction: row !important; gap: 10px !important; padding: 5px 10px !important; flex: 1 !important; width: 100% !important; margin: 0 !important; }
+    .tf-panel { padding: 5px 10px !important; border-width: 1px !important; justify-content: space-around !important; gap: 5px !important; flex: 1 !important; }
+    
+    .tf-panel > div:first-child > div {
+        width: 30% !important;
+        max-width: 100px !important;
+    }
+
     .tf-question { font-size: clamp(1.5rem, 6vh, 2.5rem) !important; margin-bottom: 0 !important; }
     .tf-btn { font-size: clamp(1.5rem, 6vh, 2.5rem) !important; padding: 5px 0 !important; width: 48% !important; border-width: 1px !important; }
     .tf-actions { justify-content: space-between !important; margin: 0 !important; }
@@ -398,8 +406,8 @@ path:hover {
     .tf-nav-btn, .tf-next-btn { padding: 5px 15px !important; font-size: clamp(1.2rem, 5vh, 2rem) !important; }
 
     /* Overlay / Popup */
-    .overlay-content { padding: 10px !important; }
+    .overlay-content { padding: 15px !important; width: 90% !important; }
     .overlay-title { font-size: clamp(2rem, 8vh, 4rem) !important; margin-bottom: 5px !important; }
-    .overlay-text { font-size: clamp(1.5rem, 6vh, 3rem) !important; margin-bottom: 10px !important; }
-    .next-btn { font-size: 1.2rem !important; padding: 5px 20px !important; }
+    .overlay-text { font-size: clamp(1.8rem, 8vh, 4rem) !important; margin-bottom: 10px !important; line-height: 1.2 !important; }
+    .next-btn { font-size: 1.5rem !important; padding: 5px 30px !important; }
 }
