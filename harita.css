@@ -280,39 +280,88 @@ path:hover {
     .hero-content > div { flex-direction: column !important; align-items: center; }
     
     /* Şehir Avı Ekranı */
+    #game-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+    }
     .arabic-word {
         font-size: clamp(2rem, 8vw, 4.5rem) !important;
-        bottom: 20px !important;
+        bottom: 120px !important;
         right: 0 !important;
         left: 0 !important;
         padding: 0 10px !important;
         text-align: center !important;
     }
     .compass-box {
-        transform: scale(0.4);
+        transform: scale(0.45);
         transform-origin: bottom right;
-        bottom: 10px !important;
+        bottom: 80px !important;
         right: 10px !important;
         z-index: 5;
     }
     svg {
-        max-height: 60vh !important;
-        margin-top: 10vh !important;
+        max-height: 50vh !important;
+        margin-top: auto !important;
+        margin-bottom: 25vh !important;
     }
 
     /* Doğru / Yanlış Ekranı */
-    .tf-header { font-size: clamp(1.5rem, 5vw, 3rem) !important; padding: 10px !important; }
-    .tf-arena { flex-direction: column !important; gap: 10px !important; padding: 0 10px 10px 10px !important; }
+    #tf-screen { justify-content: center !important; }
+    .tf-header { font-size: clamp(1.5rem, 5vw, 3rem) !important; padding: 10px !important; margin-top: auto; }
+    .tf-arena { flex: 0 1 auto !important; flex-direction: column !important; gap: 10px !important; padding: 10px !important; }
     .tf-panel { padding: 15px !important; border-width: 2px !important; border-radius: 20px !important; gap: 10px !important; }
     .tf-question { font-size: clamp(2rem, 6vw, 4rem) !important; margin-bottom: 5px !important; }
     .tf-btn { font-size: clamp(2rem, 6vw, 4rem) !important; padding: 10px 0 !important; border-width: 2px !important; border-radius: 10px !important; }
     .tf-actions { gap: 10px !important; }
+    .tf-footer { padding: 10px !important; margin-bottom: auto; }
     .tf-nav-btn, .tf-next-btn { padding: 10px 20px !important; font-size: clamp(1.5rem, 5vw, 3rem) !important; border-radius: 10px !important; }
-    .tf-footer { padding: 10px !important; }
 
     /* Overlay / Popup */
     .overlay-content { padding: 20px !important; width: 90% !important; border-radius: 20px !important; }
     .overlay-title { font-size: clamp(3rem, 12vw, 7rem) !important; margin-bottom: 10px !important; }
     .overlay-text { font-size: clamp(2rem, 8vw, 3.5rem) !important; margin-bottom: 15px !important; }
     .next-btn { font-size: 1.5rem !important; padding: 10px 30px !important; }
+}
+
+/* --- MOBİL YATAY UYUMLULUK (LANDSCAPE) --- */
+@media screen and (max-height: 500px), screen and (max-width: 950px) and (orientation: landscape) {
+    /* Açılış Ekranı (İlk Sayfa) */
+    .hero-title { font-size: clamp(2rem, 8vh, 4rem) !important; margin-bottom: 5px !important; }
+    .hero-content { gap: 10px !important; }
+    .hero-content > div { flex-direction: row !important; }
+    .hero-btn-large { padding: 10px 20px !important; font-size: clamp(1.5rem, 5vh, 2.5rem) !important; width: auto !important; }
+    
+    /* Şehir Avı Ekranı */
+    svg {
+        max-height: 75vh !important;
+        margin-top: 5vh !important;
+        margin-bottom: 5vh !important;
+    }
+    .arabic-word {
+        font-size: clamp(1.5rem, 6vh, 3rem) !important;
+        bottom: 5px !important;
+    }
+    .compass-box {
+        transform: scale(0.3) !important;
+        bottom: -20px !important;
+        right: -20px !important;
+    }
+    
+    /* Doğru/Yanlış Ekranı */
+    .tf-header { font-size: clamp(1.2rem, 5vh, 2rem) !important; padding: 5px !important; }
+    .tf-arena { flex-direction: row !important; gap: 10px !important; padding: 5px 10px !important; flex: 1 !important; }
+    .tf-panel { padding: 5px 10px !important; border-width: 1px !important; justify-content: space-around !important; gap: 5px !important; }
+    .tf-question { font-size: clamp(1.5rem, 6vh, 2.5rem) !important; margin-bottom: 0 !important; }
+    .tf-btn { font-size: clamp(1.5rem, 6vh, 2.5rem) !important; padding: 5px 0 !important; width: 48% !important; border-width: 1px !important; }
+    .tf-actions { justify-content: space-between !important; }
+    .tf-footer { padding: 5px !important; }
+    .tf-nav-btn, .tf-next-btn { padding: 5px 15px !important; font-size: clamp(1.2rem, 5vh, 2rem) !important; }
+
+    /* Overlay / Popup */
+    .overlay-content { padding: 10px !important; }
+    .overlay-title { font-size: clamp(2rem, 8vh, 4rem) !important; margin-bottom: 5px !important; }
+    .overlay-text { font-size: clamp(1.5rem, 6vh, 3rem) !important; margin-bottom: 10px !important; }
+    .next-btn { font-size: 1.2rem !important; padding: 5px 20px !important; }
 }
