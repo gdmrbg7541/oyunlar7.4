@@ -272,7 +272,7 @@ path:hover {
 @media (max-width: 900px) {
     /* Genel ve Geri Butonu */
     .container { height: 100dvh !important; overflow: hidden !important; }
-    .back-btn { top: 10px; left: 10px; width: 40px; height: 40px; }
+    .back-btn { top: 25px; left: 10px; width: 40px; height: 40px; }
     .back-btn svg { width: 20px; height: 20px; }
 
     /* Açılış Ekranı */
@@ -285,15 +285,15 @@ path:hover {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: space-between !important;
-        padding-top: 50px !important;
-        padding-bottom: 30px !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        gap: 15px !important;
         flex: 1 !important;
         width: 100% !important;
         height: 100% !important;
     }
     svg {
-        max-height: 70vh !important;
+        max-height: 60vh !important;
         margin: 0 !important;
     }
     .arabic-word {

@@ -330,7 +330,7 @@
         /* --- MOBIL UYUMLULUK --- */
         @media (max-width: 900px) and (orientation: portrait) {
             :root {
-                --cell-size: 16vw;
+                --cell-size: 15vw;
                 --cell-gap: 1.5vw;
                 --move-step: calc(var(--cell-size) + var(--cell-gap));
             }
@@ -341,18 +341,20 @@
 
             #game-screen {
                 flex-direction: column !important;
-                gap: 20px !important;
-                padding-top: 80px !important; 
+                gap: 5px !important;
+                padding-top: 65px !important; 
+                padding-bottom: 10px !important;
+                justify-content: center !important;
             }
 
-            .top-nav { top: 10px !important; left: 10px !important; }
+            .top-nav { top: 25px !important; left: 10px !important; }
             .nav-btn { width: 50px !important; height: 50px !important; }
             .nav-btn svg { width: 25px !important; height: 25px !important; }
-            .top-status-bar { top: 10px !important; right: 10px !important; padding: 5px 15px !important; gap: 10px !important; }
+            .top-status-bar { top: 25px !important; right: 10px !important; padding: 5px 15px !important; gap: 10px !important; }
             .level-badge { font-size: 1.5rem !important; padding-left: 10px !important; }
             .lives-badge { font-size: 1.5rem !important; gap: 5px !important; }
 
-            .grid-map { padding: 10px !important; border-radius: 10px !important; }
+            .grid-map { padding: 5px !important; border-radius: 10px !important; margin-bottom: 5px !important; }
             .cell { font-size: 8vw !important; border-radius: 8px !important; }
             .cell.tree { font-size: 7vw !important; }
             .player { font-size: 10vw !important; padding-bottom: 0.5vw !important; }
@@ -363,13 +365,13 @@
                 border-width: 4px !important;
             }
 
-            .controls-section { margin-top: 10px !important; }
+            .controls-section { margin-top: 0 !important; }
             .controls {
-                grid-template-columns: repeat(2, 25vw) !important;
-                grid-template-rows: repeat(2, 25vw) !important;
-                gap: 3vw !important;
+                grid-template-columns: repeat(2, 22vw) !important;
+                grid-template-rows: repeat(2, 22vw) !important;
+                gap: 2vw !important;
             }
-            .btn-move { font-size: 10vw !important; border-radius: 15px !important; border-width: 2px !important; }
+            .btn-move { font-size: 8vw !important; border-radius: 15px !important; border-width: 2px !important; }
         }
 
         @media screen and (max-height: 500px), screen and (max-width: 950px) and (orientation: landscape) {
