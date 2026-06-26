@@ -27,6 +27,17 @@ body {
 button, h1, h2, p, a {
     font-family: 'Arakom', serif !important;
 }
+.hidden { display: none !important; }
+
+.overlay-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(44, 62, 80, 0.95);
+    z-index: 99999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
 .container { 
     width: 100vw; 
@@ -160,6 +171,45 @@ path:hover {
     background: var(--success);
     box-shadow: 0 25px 50px rgba(39, 174, 96, 0.3);
 }
+
+/* TF Mode Selection Buttons */
+.tf-mode-wrapper {
+    background: var(--success) !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.tf-mode-wrapper:hover {
+    box-shadow: 0 25px 50px rgba(39, 174, 96, 0.4);
+}
+.tf-mode-text {
+    font-size: inherit;
+    pointer-events: none;
+}
+.tf-sub-container {
+    display: none;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.tf-sub-btn {
+    font-size: clamp(2.5rem, 5vw, 4rem) !important;
+    padding: clamp(5px, 1vw, 10px) clamp(15px, 3vw, 30px);
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+.tf-sub-btn:hover {
+    transform: scale(1.1);
+}
+.tf-single { background: var(--info) !important; }
+.tf-multi { background: var(--warning) !important; }
 
 .hidden { display: none !important; }
 

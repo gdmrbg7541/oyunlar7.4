@@ -35,9 +35,15 @@
         <div class="hero-content">
             <h1 class="hero-title">لُعْبَة صَيْد المُدُن</h1>
             <div class="hero-divider"></div>
-            <div style="display: flex; gap: 30px; margin-top: 20px;">
+            <div style="display: flex; gap: 30px; margin-top: 20px; align-items: center; flex-wrap: wrap; justify-content: center;">
                 <button class="hero-btn-large" onclick="startGame()">خَريطَة المُدُن</button>
-                <button class="hero-btn-large" style="background: var(--success);" onclick="startTFGame()">صَحّ أَم خَطَأ</button>
+                <div id="tf-btn-wrapper" class="hero-btn-large tf-mode-wrapper" onclick="splitTFButtons(this)">
+                    <span id="tf-main-text" class="tf-mode-text">صَحّ أَم خَطَأ</span>
+                    <div id="tf-sub-btns" class="tf-sub-container">
+                        <button class="tf-sub-btn tf-single" onclick="startTFGame(1); event.stopPropagation();">👤</button>
+                        <button class="tf-sub-btn tf-multi" onclick="startTFGame(2); event.stopPropagation();">👥</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -101,6 +107,7 @@
         <div class="arabic-word" id="target-word">...</div>
     </div> 
 </div> 
+
 
 <audio id="tf-ses" src="yonergedogruyanlis.mp3" preload="auto"></audio>
 

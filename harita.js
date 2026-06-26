@@ -198,15 +198,46 @@ const tfData = [
     { q: "باطْمان تَقَعُ في غَرْب تُرْكِيا.", a: false }
 ];
 
+let tfMode = 2;
 let currentTFIndex = 0;
 let p1Choice = null;
 let p2Choice = null;
 let tfHistory = {}; 
 
-function startTFGame() {
+
+function splitTFButtons(container) {
+    if (!container) return;
+    const mainText = document.getElementById('tf-main-text');
+    const subBtns = document.getElementById('tf-sub-btns');
+    if (mainText) mainText.style.display = 'none';
+    if (subBtns) subBtns.style.display = 'flex';
+    
+    container.style.cursor = 'default';
+    container.onclick = null;
+}
+
+function startTFGame(mode) {
+    tfMode = mode || 2;
+
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('game-screen').classList.add('hidden');
     document.getElementById('tf-screen').classList.remove('hidden');
+    
+    const p1Panel = document.getElementById('p1-panel');
+    const p2Panel = document.getElementById('p2-panel');
+    if (tfMode === 1) {
+        if (p2Panel) p2Panel.style.display = 'none';
+        if (p1Panel) {
+            p1Panel.style.flex = '0 1 800px';
+            p1Panel.style.margin = '0 auto';
+        }
+    } else {
+        if (p2Panel) p2Panel.style.display = 'flex';
+        if (p1Panel) {
+            p1Panel.style.flex = '1';
+            p1Panel.style.margin = '0';
+        }
+    }
     
     const yonetgeSesi = document.getElementById('tf-ses');
     if (yonetgeSesi) {
@@ -226,42 +257,71 @@ function startTFGame() {
 function loadTFQuestions() {
     p1Choice = null;
     p2Choice = null;
-    
-    const q1 = tfData[currentTFIndex % tfData.length];
-    const q2 = tfData[(currentTFIndex + 1) % tfData.length];
-    
-    document.getElementById('p1-question').innerText = q1.q;
-    document.getElementById('p1-question').dataset.ans = q1.a;
-    
-    document.getElementById('p2-question').innerText = q2.q;
-    document.getElementById('p2-question').dataset.ans = q2.a;
 
-    const currentRound = (currentTFIndex / 2) % 3; 
-    const blockStartIdx = Math.floor(currentTFIndex / 6) * 6;
+    if (tfMode === 1) {
+        const q1 = tfData[currentTFIndex % tfData.length];
+        document.getElementById('p1-question').innerText = q1.q;
+        document.getElementById('p1-question').dataset.ans = q1.a;
 
-    for(let i = 0; i < 3; i++) {
-        const historyData = tfHistory[blockStartIdx + (i * 2)];
-        const b1 = document.getElementById(`p1-bar-${i + 1}`);
-        const b2 = document.getElementById(`p2-bar-${i + 1}`);
+        const currentRound = currentTFIndex % 3; 
+        const blockStartIdx = Math.floor(currentTFIndex / 3) * 3;
+
+        for(let i = 0; i < 3; i++) {
+            const historyData = tfHistory[blockStartIdx + i];
+            // HTML defines p1-panel's bars as p2-bar-1 etc.
+            const b1 = document.getElementById(`p2-bar-${i + 1}`);
+            
+            if (b1) {
+                if (historyData) {
+                    const qAns = tfData[(blockStartIdx + i) % tfData.length].a;
+                    b1.style.background = (historyData.p1 === qAns) ? "var(--success)" : "var(--danger)";
+                    b1.style.boxShadow = (historyData.p1 === qAns) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+                } else if (i === currentRound) {
+                    b1.style.background = "var(--primary)";
+                    b1.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
+                } else {
+                    b1.style.background = "#e2e8f0";
+                    b1.style.boxShadow = "none";
+                }
+            }
+        }
+    } else {
+        const q1 = tfData[currentTFIndex % tfData.length];
+        const q2 = tfData[(currentTFIndex + 1) % tfData.length];
         
-        if (b1 && b2) {
-            if (historyData) {
-                const q1Ans = tfData[(blockStartIdx + (i*2)) % tfData.length].a;
-                const q2Ans = tfData[(blockStartIdx + (i*2) + 1) % tfData.length].a;
-                b1.style.background = (historyData.p1 === q1Ans) ? "var(--success)" : "var(--danger)";
-                b1.style.boxShadow = (historyData.p1 === q1Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
-                b2.style.background = (historyData.p2 === q2Ans) ? "var(--success)" : "var(--danger)";
-                b2.style.boxShadow = (historyData.p2 === q2Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
-            } else if (i === currentRound) {
-                b1.style.background = "var(--primary)";
-                b1.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
-                b2.style.background = "var(--primary)";
-                b2.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
-            } else {
-                b1.style.background = "#e2e8f0";
-                b1.style.boxShadow = "none";
-                b2.style.background = "#e2e8f0";
-                b2.style.boxShadow = "none";
+        document.getElementById('p1-question').innerText = q1.q;
+        document.getElementById('p1-question').dataset.ans = q1.a;
+        
+        document.getElementById('p2-question').innerText = q2.q;
+        document.getElementById('p2-question').dataset.ans = q2.a;
+
+        const currentRound = (currentTFIndex / 2) % 3; 
+        const blockStartIdx = Math.floor(currentTFIndex / 6) * 6;
+
+        for(let i = 0; i < 3; i++) {
+            const historyData = tfHistory[blockStartIdx + (i * 2)];
+            const b1 = document.getElementById(`p1-bar-${i + 1}`);
+            const b2 = document.getElementById(`p2-bar-${i + 1}`);
+            
+            if (b1 && b2) {
+                if (historyData) {
+                    const q1Ans = tfData[(blockStartIdx + (i*2)) % tfData.length].a;
+                    const q2Ans = tfData[(blockStartIdx + (i*2) + 1) % tfData.length].a;
+                    b1.style.background = (historyData.p1 === q1Ans) ? "var(--success)" : "var(--danger)";
+                    b1.style.boxShadow = (historyData.p1 === q1Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+                    b2.style.background = (historyData.p2 === q2Ans) ? "var(--success)" : "var(--danger)";
+                    b2.style.boxShadow = (historyData.p2 === q2Ans) ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+                } else if (i === currentRound) {
+                    b1.style.background = "var(--primary)";
+                    b1.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
+                    b2.style.background = "var(--primary)";
+                    b2.style.boxShadow = "0 2px 8px rgba(44, 62, 80, 0.3)";
+                } else {
+                    b1.style.background = "#e2e8f0";
+                    b1.style.boxShadow = "none";
+                    b2.style.background = "#e2e8f0";
+                    b2.style.boxShadow = "none";
+                }
             }
         }
     }
@@ -278,7 +338,6 @@ function loadTFQuestions() {
     const prevBtn = document.getElementById('tf-prev-btn');
     
     if (prevBtn) prevBtn.style.display = "none";
-    
     if (nextBtn) {
         nextBtn.style.display = "none";
         nextBtn.disabled = true;
@@ -287,47 +346,45 @@ function loadTFQuestions() {
 }
 
 function answerTF(player, choice) {
-    if (player === 1 && p1Choice !== null) return;
-    if (player === 2 && p2Choice !== null) return;
+    if (tfMode === 1) {
+        if (player === 1 && p1Choice !== null) return;
+        p1Choice = choice;
 
-    if (player === 1) p1Choice = choice;
-    if (player === 2) p2Choice = choice;
+        const pPanel = document.getElementById(`p${player}-panel`);
+        const qElem = document.getElementById(`p${player}-question`);
+        const correctAns = qElem.dataset.ans === "true";
+        const isCorrect = (choice === correctAns);
 
-    const pPanel = document.getElementById(`p${player}-panel`);
-    const qElem = document.getElementById(`p${player}-question`);
-    const correctAns = qElem.dataset.ans === "true";
-    const isCorrect = (choice === correctAns);
+        pPanel.querySelectorAll('.tf-btn').forEach(b => {
+            b.disabled = true;
+            b.style.opacity = "0.4"; 
+            b.style.background = "";
+            b.style.borderColor = "";
+        });
 
-    pPanel.querySelectorAll('.tf-btn').forEach(b => {
-        b.disabled = true;
-        b.style.opacity = "0.4"; 
-        b.style.background = "";
-        b.style.borderColor = "";
-    });
+        const selectedBtn = pPanel.querySelector(choice ? '.tf-true' : '.tf-false');
+        selectedBtn.style.opacity = "1";
+        
+        if (isCorrect) {
+            selectedBtn.classList.add('tf-correct');
+            playSound('success');
+        } else {
+            selectedBtn.classList.add('tf-wrong');
+            const actualCorrectBtn = pPanel.querySelector(correctAns ? '.tf-true' : '.tf-false');
+            actualCorrectBtn.classList.add('tf-correct');
+            actualCorrectBtn.style.opacity = "1";
+            playSound('error');
+        }
 
-    const selectedBtn = pPanel.querySelector(choice ? '.tf-true' : '.tf-false');
-    selectedBtn.style.opacity = "1";
-    
-    if (isCorrect) {
-        selectedBtn.classList.add('tf-correct');
-        playSound('success');
-    } else {
-        selectedBtn.classList.add('tf-wrong');
-        const actualCorrectBtn = pPanel.querySelector(correctAns ? '.tf-true' : '.tf-false');
-        actualCorrectBtn.classList.add('tf-correct');
-        actualCorrectBtn.style.opacity = "1";
-        playSound('error');
-    }
+        const currentRound = currentTFIndex % 3;
+        // p1-panel uses p2-bar-x ids in HTML!
+        const pBar = document.getElementById(`p2-bar-${currentRound + 1}`);
+        if (pBar) {
+            pBar.style.background = isCorrect ? "var(--success)" : "var(--danger)";
+            pBar.style.boxShadow = isCorrect ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+        }
 
-    const currentRound = (currentTFIndex / 2) % 3;
-    const pBar = document.getElementById(`p${player}-bar-${currentRound + 1}`);
-    if (pBar) {
-        pBar.style.background = isCorrect ? "var(--success)" : "var(--danger)";
-        pBar.style.boxShadow = isCorrect ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
-    }
-
-    if (p1Choice !== null && p2Choice !== null) {
-        tfHistory[currentTFIndex] = { p1: p1Choice, p2: p2Choice };
+        tfHistory[currentTFIndex] = { p1: p1Choice };
         
         if (currentRound < 2) {
             setTimeout(() => {
@@ -341,17 +398,82 @@ function answerTF(player, choice) {
                 nextBtn.classList.add('active');
             }
         }
+
+    } else {
+        if (player === 1 && p1Choice !== null) return;
+        if (player === 2 && p2Choice !== null) return;
+
+        if (player === 1) p1Choice = choice;
+        if (player === 2) p2Choice = choice;
+
+        const pPanel = document.getElementById(`p${player}-panel`);
+        const qElem = document.getElementById(`p${player}-question`);
+        const correctAns = qElem.dataset.ans === "true";
+        const isCorrect = (choice === correctAns);
+
+        pPanel.querySelectorAll('.tf-btn').forEach(b => {
+            b.disabled = true;
+            b.style.opacity = "0.4"; 
+            b.style.background = "";
+            b.style.borderColor = "";
+        });
+
+        const selectedBtn = pPanel.querySelector(choice ? '.tf-true' : '.tf-false');
+        selectedBtn.style.opacity = "1";
+        
+        if (isCorrect) {
+            selectedBtn.classList.add('tf-correct');
+            playSound('success');
+        } else {
+            selectedBtn.classList.add('tf-wrong');
+            const actualCorrectBtn = pPanel.querySelector(correctAns ? '.tf-true' : '.tf-false');
+            actualCorrectBtn.classList.add('tf-correct');
+            actualCorrectBtn.style.opacity = "1";
+            playSound('error');
+        }
+
+        const currentRound = (currentTFIndex / 2) % 3;
+        const pBar = document.getElementById(`p${player}-bar-${currentRound + 1}`);
+        if (pBar) {
+            pBar.style.background = isCorrect ? "var(--success)" : "var(--danger)";
+            pBar.style.boxShadow = isCorrect ? "0 0 10px rgba(39, 174, 96, 0.4)" : "0 0 10px rgba(231, 76, 60, 0.4)";
+        }
+
+        if (p1Choice !== null && p2Choice !== null) {
+            tfHistory[currentTFIndex] = { p1: p1Choice, p2: p2Choice };
+            
+            if (currentRound < 2) {
+                setTimeout(() => {
+                    nextTFTurn();
+                }, 1500);
+            } else {
+                const nextBtn = document.getElementById('tf-next-btn');
+                if (nextBtn) {
+                    nextBtn.style.display = "block";
+                    nextBtn.disabled = false;
+                    nextBtn.classList.add('active');
+                }
+            }
+        }
     }
 }
 
 function nextTFTurn() {
-    currentTFIndex += 2;
+    if (tfMode === 1) {
+        currentTFIndex += 1;
+    } else {
+        currentTFIndex += 2;
+    }
     loadTFQuestions();
 }
 
 function prevTFTurn() {
-    if (currentTFIndex >= 2) {
-        currentTFIndex -= 2;
-        loadTFQuestions();
+    if (tfMode === 1) {
+        if (currentTFIndex >= 1) currentTFIndex -= 1;
+    } else {
+        if (currentTFIndex >= 2) currentTFIndex -= 2;
     }
+    loadTFQuestions();
 }
+
+
