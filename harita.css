@@ -336,15 +336,21 @@ path:hover {
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 0 !important;
-        gap: 15px !important;
-        flex: 1 !important;
-        width: 100% !important;
-        height: 100% !important;
+        padding: 60px 0 20px 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
     }
-    svg {
-        max-height: 60vh !important;
-        margin: 0 !important;
+    #map-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        flex: 0 1 auto !important;
+    }
+    #map-container svg, svg {
+        max-height: 55vh !important;
+        max-width: 95vw !important;
+        margin: 0 auto !important;
     }
     .arabic-word {
         position: relative !important;
@@ -352,12 +358,11 @@ path:hover {
         left: auto !important;
         right: auto !important;
         font-size: clamp(2.5rem, 8vw, 4.5rem) !important;
-        padding: 0 10px !important;
+        padding: 10px !important;
         text-align: center !important;
-        line-height: 1 !important;
-        margin: 0 !important;
+        margin: 30px 0 20px 0 !important;
     }
-    .compass-box {
+    #game-screen .compass-box, .compass-box {
         display: none !important;
     }
 
