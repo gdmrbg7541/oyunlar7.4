@@ -267,3 +267,52 @@ path:hover {
 .tf-nav-btn { background: #cbd5e0; color: white; border: none; padding: 15px 40px; font-size: 2.2rem; border-radius: 15px; transition: all 0.3s ease; }
 .tf-nav-btn.active { background: var(--primary); cursor: pointer; box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2); }
 .tf-nav-btn.active:hover { background: var(--success); transform: scale(1.05); }
+
+/* --- MOBİL UYUMLULUK (RESPONSIVE) --- */
+@media (max-width: 900px) {
+    /* Genel ve Geri Butonu */
+    .back-btn { top: 10px; left: 10px; width: 40px; height: 40px; }
+    .back-btn svg { width: 20px; height: 20px; }
+
+    /* Açılış Ekranı */
+    .hero-title { font-size: clamp(3rem, 10vw, 7rem) !important; }
+    .hero-btn-large { padding: 15px 40px; font-size: clamp(2rem, 6vw, 4rem) !important; width: 90%; }
+    .hero-content > div { flex-direction: column !important; align-items: center; }
+    
+    /* Şehir Avı Ekranı */
+    .arabic-word {
+        font-size: clamp(2rem, 8vw, 4.5rem) !important;
+        bottom: 20px !important;
+        right: 0 !important;
+        left: 0 !important;
+        padding: 0 10px !important;
+        text-align: center !important;
+    }
+    .compass-box {
+        transform: scale(0.4);
+        transform-origin: bottom right;
+        bottom: 10px !important;
+        right: 10px !important;
+        z-index: 5;
+    }
+    svg {
+        max-height: 60vh !important;
+        margin-top: 10vh !important;
+    }
+
+    /* Doğru / Yanlış Ekranı */
+    .tf-header { font-size: clamp(1.5rem, 5vw, 3rem) !important; padding: 10px !important; }
+    .tf-arena { flex-direction: column !important; gap: 10px !important; padding: 0 10px 10px 10px !important; }
+    .tf-panel { padding: 15px !important; border-width: 2px !important; border-radius: 20px !important; gap: 10px !important; }
+    .tf-question { font-size: clamp(2rem, 6vw, 4rem) !important; margin-bottom: 5px !important; }
+    .tf-btn { font-size: clamp(2rem, 6vw, 4rem) !important; padding: 10px 0 !important; border-width: 2px !important; border-radius: 10px !important; }
+    .tf-actions { gap: 10px !important; }
+    .tf-nav-btn, .tf-next-btn { padding: 10px 20px !important; font-size: clamp(1.5rem, 5vw, 3rem) !important; border-radius: 10px !important; }
+    .tf-footer { padding: 10px !important; }
+
+    /* Overlay / Popup */
+    .overlay-content { padding: 20px !important; width: 90% !important; border-radius: 20px !important; }
+    .overlay-title { font-size: clamp(3rem, 12vw, 7rem) !important; margin-bottom: 10px !important; }
+    .overlay-text { font-size: clamp(2rem, 8vw, 3.5rem) !important; margin-bottom: 15px !important; }
+    .next-btn { font-size: 1.5rem !important; padding: 10px 30px !important; }
+}
