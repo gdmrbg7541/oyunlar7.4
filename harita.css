@@ -1,3 +1,5 @@
+h1, h2, h3, h4, h5, h6, strong, b { font-weight: normal !important; }
+
 @font-face {
     font-family: 'Arakom';
     src: url('arakom.ttf') format('truetype');
@@ -196,7 +198,7 @@ path:hover {
 }
 
 .dir-item {
-    display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); background: white; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 2.5rem; padding: 4px 10px;
+    display: flex; align-items: center; justify-content: center; font-weight: normal; color: var(--primary); background: white; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 2.5rem; padding: 4px 10px;
 }
 .dir-north { grid-area: north;}
 .dir-south { grid-area: south; }
@@ -247,7 +249,7 @@ path:hover {
 
 /* Doğru/Yanlış Alanı */
 #tf-screen { width: 100vw; height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
-.tf-header { text-align: center; padding: 15px; font-size: 3rem; color: var(--primary); font-weight: bold; text-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.tf-header { text-align: center; padding: 15px; font-size: 3rem; color: var(--primary); font-weight: normal; text-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 .tf-arena { display: flex; flex: 1; gap: 40px; padding: 0 40px 20px 40px; }
 .tf-panel { flex: 1; background: white; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding: 40px; border: 4px solid #e2e8f0; }
 .tf-player-title { font-size: 3.5rem; color: #95a5a6; }
