@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>الدَّليلُ السِّياحِيّ</title>
     <style>
+    h1, h2, h3, h4, h5, h6, strong, b { font-weight: normal !important; }
+
         @font-face { 
             font-family: 'Arakom'; 
             src: url('arakom.ttf') format('truetype'); 
@@ -16,6 +18,9 @@
             --accent: #f97316;
             --bg-color: #faf5ff;
             --text-dark: #3b0764;
+            --cell-size: 16.5vh;
+            --cell-gap: 1vh;
+            --move-step: calc(var(--cell-size) + var(--cell-gap));
         }
 
         * {
@@ -81,7 +86,7 @@
         .level-badge {
             font-size: 2rem;
             color: var(--primary);
-            font-weight: bold;
+            font-weight: normal;
             border-left: 2px solid #e2e8f0;
             padding-left: 20px;
         }
@@ -116,26 +121,28 @@
         }
 
         .title-box {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px 60px;
-            border-radius: 40px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.2);
-            border: 2px solid rgba(255,255,255,0.5);
-            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
         }
 
         .title-box h1 {
-            font-size: 5rem;
-            color: var(--primary);
+            font-size: clamp(5rem, 10vw, 10rem);
+            color: #ffffff;
+            text-shadow: 0 10px 30px rgba(139, 92, 246, 0.6);
             margin-bottom: 20px;
             font-weight: normal;
+            line-height: 1.2;
         }
 
         .title-box p {
-            font-size: 2.5rem;
-            color: #4c1d95;
-            margin-bottom: 40px;
+            font-size: clamp(3rem, 6vw, 5rem);
+            color: var(--text-dark);
+            margin-bottom: 60px;
             font-weight: normal;
         }
 
@@ -143,12 +150,12 @@
             background: var(--accent);
             color: white;
             border: none;
-            padding: 20px 60px;
-            font-size: 3.5rem;
+            padding: 30px 100px;
+            font-size: clamp(4rem, 8vw, 8rem);
             font-family: 'Arakom', sans-serif;
-            border-radius: 50px;
+            border-radius: 80px;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);
+            box-shadow: 0 15px 35px rgba(249, 115, 22, 0.5);
             transition: all 0.2s;
         }
         
@@ -162,7 +169,7 @@
             justify-content: center;
             width: 100%;
             height: 100vh;
-            gap: 60px;
+            gap: 8vw;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s;
@@ -183,22 +190,41 @@
         }
 
         .question-box {
-            background: white;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-size: 3rem;
-            color: var(--accent);
-            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.2);
-            margin-bottom: 30px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px 60px;
+            border-radius: 50px;
+            font-size: clamp(3rem, 8vw, 8rem);
+            color: var(--text-dark);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
             text-align: center;
-            border: 3px solid var(--accent);
+            border: 8px solid var(--primary);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .question-box.pop-animate {
+            animation: popupAnim 3s forwards;
+        }
+
+        @keyframes popupAnim {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            10% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            15% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            85% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
         }
 
         .grid-map {
             display: grid;
-            grid-template-columns: repeat(5, 100px);
-            grid-template-rows: repeat(5, 100px);
-            gap: 8px;
+            grid-template-columns: repeat(5, var(--cell-size));
+            grid-template-rows: repeat(5, var(--cell-size));
+            gap: var(--cell-gap);
             background: rgba(255, 255, 255, 0.6);
             padding: 15px;
             border-radius: 20px;
@@ -213,23 +239,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            font-size: 6vh;
         }
 
         .cell.road { background: #cbd5e1; }
-        .cell.tree { background: #86efac; font-size: 3.5rem; }
+        .cell.tree { background: #86efac; font-size: 5vh; }
 
         .player {
-            position: absolute;
-            top: 15px; left: 15px; /* Grid padding offset */
-            font-size: 4.5rem;
+            font-size: 9.5vh;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 5;
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
-            width: 100px; height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            line-height: 0;
+            padding-bottom: 1vh; /* Emojilerin dikey hizalanmasındaki taşmayı toparlar */
         }
 
         /* SAĞ TARAF: Yön Kontrolleri (2x2) */
@@ -241,17 +266,17 @@
 
         .controls {
             display: grid;
-            grid-template-columns: repeat(2, 140px);
-            grid-template-rows: repeat(2, 140px);
-            gap: 20px;
+            grid-template-columns: repeat(2, 20vh);
+            grid-template-rows: repeat(2, 20vh);
+            gap: 3vh;
             direction: ltr; 
         }
 
         .btn-move {
             border-radius: 30px;
-            width: 140px;
-            height: 140px;
-            font-size: 3.5rem;
+            width: 100%;
+            height: 100%;
+            font-size: 7vh;
             font-family: 'Arakom', sans-serif;
             color: white;
             cursor: pointer;
@@ -332,7 +357,7 @@
         }
         .rotate-text { font-size: 2.5rem; font-family: 'Arakom', Tahoma, sans-serif; }
 
-        @media only screen and (max-width: 900px) and (orientation: portrait) {
+        @media only screen and (max-width: 900px) and (orientation: portrait) and (pointer: coarse) {
             #rotate-message { display: flex !important; }
         }
 
@@ -351,7 +376,7 @@
 <body>
 
     <!-- CİHAZ DÖNDÜRME UYARISI (TÜM OYUNLAR ORTAK) -->
-    <div id="rotate-message">
+    <div id="rotate-message" style="display: none;">
         <div class="phone-animation"></div>
         <div class="rotate-text">يُرْجى تَدْوير الجِهاز</div> 
     </div>
@@ -384,10 +409,10 @@
     <div id="start-screen">
         <div class="title-box">
             <h1>الدَّليلُ السِّياحِيّ</h1>
-            <p style="font-size: 2rem; max-width: 600px; margin: 0 auto 40px auto; line-height: 1.5; font-weight: normal;">
+            <p>
                 اِسْتَخْدِم الِاتِّجاهات لِلْوُصول إِلى الهَدَف.
             </p>
-            <button class="btn-start" onclick="startGame()">اِبْدَأ</button>
+            <button class="btn-start" onclick="startGame()">اِبْدَأْ</button>
         </div>
     </div>
 
@@ -576,8 +601,12 @@
             // Eğer yeni levele geçildiyse canları fulleyebiliriz, veya oyun boyunca 3 hak diyebiliriz.
             // Kullanıcı "3 kalp 3 hak" dediğine göre oyun geneli 3 hak olsun. (Full'lemiyoruz).
 
-            // Soru alanını güncelle
-            document.getElementById('question-text').innerText = levelData.title;
+            // Soru alanını güncelle ve Popup'ı göster
+            const qBox = document.getElementById('question-text');
+            qBox.innerText = levelData.title;
+            qBox.classList.remove('pop-animate');
+            void qBox.offsetWidth; // Reflow
+            qBox.classList.add('pop-animate');
 
             // Bölüme ait MP3 sesini çal
             currentAudio.pause();
@@ -590,6 +619,8 @@
                 for(let x=0; x<5; x++) {
                     const cell = document.createElement('div');
                     cell.className = 'cell';
+                    cell.style.gridColumn = x + 1;
+                    cell.style.gridRow = y + 1;
                     if(levelData.mapLayout[y][x] === 0) cell.classList.add('road');
                     if(levelData.mapLayout[y][x] === 1) {
                         cell.classList.add('tree');
@@ -606,7 +637,9 @@
             playerX = levelData.playerStartX;
             playerY = levelData.playerStartY;
             mapEl.appendChild(playerEl);
-            playerEl.style.transform = `translate(${playerX * cellSize}px, ${playerY * cellSize}px) scaleX(1)`;
+            playerEl.style.gridColumn = playerX + 1;
+            playerEl.style.gridRow = playerY + 1;
+            playerEl.style.transform = 'scaleX(1)';
 
             // SADECE her level başladığında butonları karıştır
             shuffleButtons();
@@ -668,8 +701,14 @@
             playerX = nextX;
             playerY = nextY;
 
-            if(dir === 'left') playerEl.style.transform = `translate(${playerX * cellSize}px, ${playerY * cellSize}px) scaleX(1)`;
-            else playerEl.style.transform = `translate(${playerX * cellSize}px, ${playerY * cellSize}px) scaleX(-1)`;
+            playerEl.style.gridColumn = playerX + 1;
+            playerEl.style.gridRow = playerY + 1;
+            
+            if(dir === 'left') {
+                playerEl.style.transform = 'scaleX(1)';
+            } else {
+                playerEl.style.transform = 'scaleX(-1)';
+            }
 
             // Hedefe ulaşıldı mı?
             if(playerX === levelData.targetX && playerY === levelData.targetY) {

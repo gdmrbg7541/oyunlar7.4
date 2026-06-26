@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مَدينَتي وَبَلَدي - أَلْعاب</title>
     <style>
+    h1, h2, h3, h4, h5, h6, strong, b { font-weight: normal !important; }
+
         @font-face { 
             font-family: 'Arakom'; 
             src: url('arakom.ttf') format('truetype'); 
@@ -179,7 +181,7 @@
             font-size: clamp(4rem, 12vw, 10rem); /* Dev rakamlar mobilde hızla küçülür */
             font-family: 'Georgia', 'Times New Roman', serif;
             font-style: italic;
-            font-weight: 500;
+            font-weight: normal;
             background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(15, 118, 110, 0.01));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -301,8 +303,8 @@
         }
         .rotate-text { font-size: 2.5rem; font-family: 'Arakom', Tahoma, sans-serif; }
 
-        @media only screen and (max-width: 900px) and (orientation: portrait) {
-            /* #rotate-message { display: flex !important; } */
+        @media only screen and (max-width: 900px) and (orientation: portrait) and (pointer: coarse) {
+            #rotate-message { display: flex !important; }
         }
 
         @media screen and (max-height: 500px) {
@@ -320,7 +322,7 @@
 <body>
 
     <!-- CİHAZ DÖNDÜRME UYARISI (TÜM OYUNLAR ORTAK) -->
-    <div id="rotate-message">
+    <div id="rotate-message" style="display: none;">
         <div class="phone-animation"></div>
         <div class="rotate-text">يُرْجى تَدْوير الجِهاز</div> 
     </div>
