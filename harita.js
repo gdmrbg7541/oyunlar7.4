@@ -61,14 +61,11 @@ function startGame() {
 
 function showQuestion() {
     if (currentStep >= shuffledCities.length) {
-        currentStep = 0;
-        shuffledCities = [...cityData].sort(() => 0.5 - Math.random()).slice(0, limit);
-        document.querySelectorAll('path').forEach(path => {
-            const isKnownCity = cityData.some(city => city.id === path.id);
-            if (isKnownCity && !path.classList.contains('answered-correct-fixed')) {
-                path.classList.add('highlight-city');
-            }
-        });
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('end-screen').style.display = 'flex';
+        document.getElementById('final-score').innerText = `18 / 18 إِجابَة صَحيحَة`;
+        return;
     }
     
     const currentCity = shuffledCities[currentStep];
@@ -111,6 +108,12 @@ function handleCityClick(clickedId) {
     } else {
         playSound('error');
         element.classList.add('wrong-answer');
+        // Show the correct city in green
+        const correctElement = document.getElementById(currentCity.id);
+        if (correctElement) {
+            correctElement.classList.add('answered-correct-fixed');
+            correctElement.classList.remove('highlight-city');
+        }
     }
 
     setTimeout(() => { 

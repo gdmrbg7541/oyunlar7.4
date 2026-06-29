@@ -339,7 +339,7 @@
 <body>
 
     <!-- CİHAZ DÖNDÜRME UYARISI (TÜM OYUNLAR ORTAK) -->
-    <div id="rotate-message">
+    <div id="rotate-message" style="display: none;">
         <div class="phone-animation"></div>
         <div class="rotate-text">يُرْجى تَدْوير الجِهاز</div> 
     </div>
@@ -628,11 +628,11 @@ const data = [
             ${ticks}
             ${numbers}
             
-            <g class="minute-hand" style="transform-origin: center; transform-box: view-box; transform: rotate(0deg); transition: transform 0.6s cubic-bezier(0.5, 2.5, 0.4, 1);">
+            <g class="minute-hand" style="transform-origin: center; transform-box: view-box; transform: rotate(0deg); transition: transform 0.6s ease-out;">
                 <line x1="50" y1="50" x2="50" y2="${yelkovanUcu}" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
             </g>
             
-            <g class="hour-hand" style="transform-origin: center; transform-box: view-box; transform: rotate(0deg); transition: transform 0.6s cubic-bezier(0.5, 2.5, 0.4, 1);">
+            <g class="hour-hand" style="transform-origin: center; transform-box: view-box; transform: rotate(0deg); transition: transform 0.6s ease-out;">
                 <line x1="50" y1="50" x2="50" y2="${akrepUcu}" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" />
             </g>
             
