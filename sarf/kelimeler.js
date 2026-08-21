@@ -296,16 +296,17 @@ window.seritKapat = seritKapat;
    Sütun sayısı yalnız bir sınıf değiştirir (.sutun-1/2/3); asıl ölçüler
    stilde, çünkü satır yüksekliği ile defter çizgisinin adımı AYNI
    değişkenden beslenmek zorunda — yoksa yazılar çizgiden kayar.
-   Kullanıcı seçmediyse sütun sayısı içeriğe göre kendi ayarlanır: en
-   uzun satırın gerçek genişliği ölçülüp kaç sütun sığdığı bulunur.
+   VARSAYILAN TEK SÜTUN (Geylani): liste açılır açılmaz kelimeler en
+   büyük hâliyle gelsin. İki ve üç sütun, sağdaki seçiciden isteyen
+   içindir; seçim o liste için oturum boyunca hatırlanıyor.
    ===================================================================== */
 const klSutunDurum = {};
 function klSutun(key) {
     const d = klSutunDurum[key];
-    return (d && d.n) ? d.n : 3;
+    return (d && d.n) ? d.n : 1;
 }
 function klSutunKur(key, n) {
-    klSutunDurum[key] = { n: (n === 1 || n === 2) ? n : 3, elle: true };
+    klSutunDurum[key] = { n: (n === 2 || n === 3) ? n : 1, elle: true };
     const d = document.querySelector(`#grid-${key} .kdf-defter`);
     if (d) d.className = 'kdf-defter sutun-' + klSutun(key);
     klSutunIsaretle(key);
@@ -313,46 +314,19 @@ function klSutunKur(key, n) {
     if (typeof SoundEngine !== "undefined") SoundEngine.playClick();
 }
 window.klSutunKur = klSutunKur;
+/* Liste çizildikten / panel açıldıktan sonra çağrılıyor: seçili sütun
+   sayısını uygular, düğmeyi işaretler ve uzun karşılıkları sığdırır.
+   Eskiden burada üçten başlayıp kırpılma bitene kadar inen bir otomatik
+   seçim vardı; artık varsayılan TEK SÜTUN, o yüzden tahmine gerek yok —
+   seçim ya kullanıcının ya da varsayılan. */
 function klOtoSutun(key) {
-    const durum = klSutunDurum[key];
-    if (durum && durum.elle) { klSutunIsaretle(key); return; }
     const d = document.querySelector(`#grid-${key} .kdf-defter`);
     if (!d) return;
-    /* Panel henüz kapalıyken (display:none) ölçü alınamaz; genişlik 0
-       çıkıp her liste tek sütuna düşüyordu. Açılışta yeniden çağrılıyor. */
-    if (d.clientWidth < 220) { klSutunIsaretle(key); return; }
-    /* Dar ekranda stil zaten tek sütun dayatıyor. */
-    if (window.innerWidth < 769) {
-        klSutunDurum[key] = { n: 1, elle: false };
-        d.className = 'kdf-defter sutun-1';
-        klSutunIsaretle(key);
-        /* Telefonda da satır sığdırması çalışsın: eskiden burada erken
-           çıkılıyordu, uzun karşılıklar telefonda "…" ile kesiliyordu. */
-        klSatirSigdir(key);
-        return;
-    }
-    /* ÖLÇÜ TAHMİNİ YOK: üçten başlayıp KIRPILMA KALMAYANA kadar iniyoruz.
-       Genişlik hesabı (numara + emoji + karşılık + Arapça + paylar) dolaylı
-       kalıyordu; noktalı bağın esnemesi ve emoji yüzünden uzun karşılıklar
-       yine "…" ile kesiliyordu. Doğrudan sonucu ölçmek kesin. */
-    let n = 3;
-    for (; n > 1; n--) {
-        d.className = 'kdf-defter sutun-' + n;
-        /* Kırpılma ölçüsü: `-webkit-box` kutusu iki satır sığsa bile
-           scrollHeight'i birkaç piksel fazla bildiriyor (bilinen bir
-           tuhaflık). Bu yüzden eşik "yarım satırdan çok" — gerçek
-           kırpılmada fark bir tam satır kadar oluyor. */
-        const kirpik = [].slice.call(d.querySelectorAll('.kdf-tr'))
-            .some(function (t) {
-                const sy = parseFloat(getComputedStyle(t).lineHeight) || 20;
-                return t.scrollWidth > t.clientWidth + 1 ||
-                       (t.scrollHeight - t.clientHeight) > sy * 0.6;
-            });
-        if (!kirpik) break;
-    }
-    d.className = 'kdf-defter sutun-' + n;
-    klSutunDurum[key] = { n: n, elle: false };
+    d.className = 'kdf-defter sutun-' + klSutun(key);
     klSutunIsaretle(key);
+    /* Panel kapalıyken (display:none) ölçü alınamaz; açılışta yeniden
+       çağrılıyor. Telefon da dâhil her durumda sığdırma çalışsın. */
+    if (d.clientWidth < 220) return;
     klSatirSigdir(key);
 }
 /* Birkaç karşılık iki satıra bile sığmıyor (uzun parantezli açıklamalar).
@@ -962,9 +936,9 @@ function renderThematicLists() {
                                      Seçim yapılmazsa sütun sayısı içeriğe göre
                                      kendiliğinden ayarlanır. -->
                                 <div class="kdf-sutun" id="sutun-sec-${key}" role="group" aria-label="Sütun sayısı">
-                                    <button type="button" class="kdf-sutun-t" data-sutun="1" onclick="klSutunKur('${key}',1)" title="Tek sütun — büyük yazı" aria-label="Tek sütun" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/></svg></button>
+                                    <button type="button" class="kdf-sutun-t aktif" data-sutun="1" onclick="klSutunKur('${key}',1)" title="Tek sütun — büyük yazı" aria-label="Tek sütun" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/></svg></button>
                                     <button type="button" class="kdf-sutun-t" data-sutun="2" onclick="klSutunKur('${key}',2)" title="İki sütun" aria-label="İki sütun" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="7.4" height="15" rx="1.8"/><rect x="13.1" y="4.5" width="7.4" height="15" rx="1.8"/></svg></button>
-                                    <button type="button" class="kdf-sutun-t aktif" data-sutun="3" onclick="klSutunKur('${key}',3)" title="Üç sütun" aria-label="Üç sütun" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="4.3" height="15" rx="1.5"/><rect x="9.85" y="4.5" width="4.3" height="15" rx="1.5"/><rect x="16.2" y="4.5" width="4.3" height="15" rx="1.5"/></svg></button>
+                                    <button type="button" class="kdf-sutun-t" data-sutun="3" onclick="klSutunKur('${key}',3)" title="Üç sütun" aria-label="Üç sütun" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="4.3" height="15" rx="1.5"/><rect x="9.85" y="4.5" width="4.3" height="15" rx="1.5"/><rect x="16.2" y="4.5" width="4.3" height="15" rx="1.5"/></svg></button>
                                 </div>
                                 <button class="memory-btn kl-tamekran" id="btn-fs-${key}" type="button"
                                         title="Kapat — listeden çık" aria-label="Kapat"
