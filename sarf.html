@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>الصَّرْفُ - أَلْعَابُ الْجُذُورِ وَالْأَوْزَانِ</title>
+
+<!-- Sitenin geri kalaniyla ayni Google Analytics etiketi. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FV9JD15KLW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FV9JD15KLW');
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Firebase 8.10.1 compat SDK + karekod üreticisi: görev köprüsü ve
+     ?oda=KOD bağlantısıyla gelen eski dijital yarışma oturumları için.
+     İnternet yoksa ya da yüklenemezse oyun normal çalışmaya devam eder. -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- ?v=NN: tarayıcı eski sarf.css/sarf.js kopyasını önbellekten sunmasın diye
+     sürüm etiketi. Oyunda görsel/işlevsel değişiklik yapıldığında bu sayı
+     artırılırsa kullanıcıların ctrl+F5 yapmasına gerek kalmaz. -->
+<link rel="stylesheet" href="sarf/sarf.css?v=122">
+    <link rel="stylesheet" href="arakom.css?v=1">
+</head>
+<!-- Bu sayfa artık "tek oyun" kipindedir: data-tek-oyun="game2" menüyü
+     tamamen atlatır, sayfa açılır açılmaz Kelime Fabrikası'nın kendisi
+     (kelimeler + öğütücü + usta atölyesi) gelir. Menü kartı ve onun
+     önizleme animasyonu kalktığı için ekranda ara adım kalmadı.
+     KELİME ÇARKI ARTIK BURADA DEĞİL: kendi sayfasında → kelimecarki.html -->
+<body data-tek-oyun="game2">
+
+<div class="floating-emojis">
+    <span class="fe-1">📖</span>
+    <span class="fe-2">✍️</span>
+    <span class="fe-3">⚙️</span>
+    <span class="fe-4">🕌</span>
+    <span class="fe-5">📚</span>
+    <span class="fe-6">🎓</span>
+</div>
+
+<!-- Menü YOK: sayfa doğrudan Kelime Fabrikası ile açılır (sarf.js, body
+     üzerindeki data-tek-oyun="game2" işaretini görür). Boş start-screen
+     yalnız sarf.js'in ekran listesiyle uyum için duruyor; ?oda= ile gelen
+     yarışma askıya alındığında da fabrikaya geri dönülür. -->
+<main class="screen" id="start-screen"></main>
+
+<!-- ================= OYUN 1: KÖKTEN KALIBA (root-to-emoji) ================= -->
+<main class="screen" id="game1-screen"></main>
+
+<!-- ============ KELİME FABRİKASI: öğütücü + usta atölyesi (ana ekran) ============ -->
+<main class="screen" id="game2-screen"></main>
+
+<!-- ================= OYUN 3: ÇOKLU KÖK AYNI KALIBA (roots-to-pattern) ================= -->
+<main class="screen" id="game3-screen"></main>
+
+<!-- ================= OYUN 4: DİJİTAL YARIŞMA (Firebase, ?oda= bağlantısıyla) ================= -->
+<main class="screen" id="quiz-screen"></main>
+
+<div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+        <div class="emoji" id="done-emoji">🎉</div>
+        <h2 id="done-text">أَحْسَنْتَ!</h2>
+        <div class="done-buttons">
+            <button class="btn-primary" id="done-replay">مِنْ جَدِيدٍ 🔄</button>
+            <button class="btn-secondary" id="done-menu">الْقَائِمَةُ ↩</button>
+        </div>
+    </div>
+</div>
+
+<!-- Kök verisi artık merkezî: veri_kokler.js (wordEasterEggs) +
+     veri_vezin_numaralari.js (KALIP_DATA). Atölyedeki isim vezinleri,
+     kaliplartablosu'ndaki "Günün Kökü" ile aynı kaynaktan gelir. -->
+<script src="veri/veri_vezin_numaralari.js"></script>
+<script src="veri/veri_kokler.js?v=135"></script>
+<!-- Kok sira numaralari + ebced + KOK·KALIP·SIGA adresi.
+     sarf.js'ten ONCE yuklenmeli; yuklenmezse sayfa eskisi gibi calisir. -->
+<script src="veri/veri_kok_numaralari.js?v=132"></script>
+<script src="sistem/gorevkopru.js?v=7"></script>
+<script>/* Sarf konu anlatimi/simulasyon sayfasidir: puan degil SURE takip edilir. */
+try { if (window.KidefGorev) KidefGorev.sureTakibiBaslat(); } catch (e) { }</script>
+<script src="sarf/sarf.js?v=125"></script>
+<script src="sistem/geri.js?v=20260808a"></script>
+<!-- Eski derin bağlantı betiği kalktı: sayfa zaten doğrudan fabrikayı
+     açtığı için sarf.html#fabrika kendiliğinden doğru yere düşer.
+     sarf.html#carki artık kelimecarki.html'e taşındı. -->
+<script id="kidef-koruma">
+/* KAYNAK KORUMA (CAYDIRICI) — sag tik + gelistirici araclari kisayollari.
+   Not: Tam guvenlik degildir; asil koruma Firestore kurallarindadir. */
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();},false);
+  document.addEventListener('keydown',function(e){
+    var k=(e.key||'').toLowerCase(), m=e.ctrlKey||e.metaKey;
+    if(e.keyCode===123||(m&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(m&&k==='u')){e.preventDefault();return false;}
+  },false);
+})();
+</script>
+</body>
+</html>
